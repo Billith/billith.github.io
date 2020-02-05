@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>ctf on bilith&#39;s blog</title>
-    <link>http://example.org/tags/ctf/</link>
+    <link>https://billith.github.io/tags/ctf/</link>
     <description>Recent content in ctf on bilith&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Wed, 05 Feb 2020 23:38:42 +0100</lastBuildDate>
     
-	<atom:link href="http://example.org/tags/ctf/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://billith.github.io/tags/ctf/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>KipodAfterFree2019 Postman</title>
-      <link>http://example.org/posts/kipodafterfree2019-postman/</link>
+      <link>https://billith.github.io/posts/kipodafterfree2019-postman/</link>
       <pubDate>Wed, 05 Feb 2020 23:38:42 +0100</pubDate>
       
-      <guid>http://example.org/posts/kipodafterfree2019-postman/</guid>
+      <guid>https://billith.github.io/posts/kipodafterfree2019-postman/</guid>
       <description>PostMan [web, 70p, 12 solves] TLDR; simple XSS which was blocked by CSP. You needed to inject into CSP header to get XSS working.
 The application let user to create posts with a title and an image. Image had to be passed in form of a link. You could report post to the admin who will inspect it (typical XSS challange). Right of a bat I found simple XSS in title field &amp;lt;script&amp;gt;alert(1)&amp;lt;/script&amp;gt;, but it was blocked due to CSP header that server set in the response:</description>
     </item>
