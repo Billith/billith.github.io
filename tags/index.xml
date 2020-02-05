@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Tags on bilith&#39;s blog</title>
+    <link>http://example.org/tags/</link>
+    <description>Recent content in Tags on bilith&#39;s blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 05 Feb 2020 23:43:53 +0100</lastBuildDate>
+    
+	<atom:link href="http://example.org/tags/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>C#</title>
+      <link>http://example.org/tags/c#/</link>
+      <pubDate>Wed, 05 Feb 2020 23:43:53 +0100</pubDate>
+      
+      <guid>http://example.org/tags/c#/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>confuserex</title>
+      <link>http://example.org/tags/confuserex/</link>
+      <pubDate>Wed, 05 Feb 2020 23:43:53 +0100</pubDate>
+      
+      <guid>http://example.org/tags/confuserex/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>dnspy</title>
+      <link>http://example.org/tags/dnspy/</link>
+      <pubDate>Wed, 05 Feb 2020 23:43:53 +0100</pubDate>
+      
+      <guid>http://example.org/tags/dnspy/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>dotnet</title>
+      <link>http://example.org/tags/dotnet/</link>
+      <pubDate>Wed, 05 Feb 2020 23:43:53 +0100</pubDate>
+      
+      <guid>http://example.org/tags/dotnet/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>obfuscation</title>
+      <link>http://example.org/tags/obfuscation/</link>
+      <pubDate>Wed, 05 Feb 2020 23:43:53 +0100</pubDate>
+      
+      <guid>http://example.org/tags/obfuscation/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>packer</title>
+      <link>http://example.org/tags/packer/</link>
+      <pubDate>Wed, 05 Feb 2020 23:43:53 +0100</pubDate>
+      
+      <guid>http://example.org/tags/packer/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>re</title>
+      <link>http://example.org/tags/re/</link>
+      <pubDate>Wed, 05 Feb 2020 23:43:53 +0100</pubDate>
+      
+      <guid>http://example.org/tags/re/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>csp</title>
+      <link>http://example.org/tags/csp/</link>
+      <pubDate>Wed, 05 Feb 2020 23:38:42 +0100</pubDate>
+      
+      <guid>http://example.org/tags/csp/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>csp injection</title>
+      <link>http://example.org/tags/csp-injection/</link>
+      <pubDate>Wed, 05 Feb 2020 23:38:42 +0100</pubDate>
+      
+      <guid>http://example.org/tags/csp-injection/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>ctf</title>
+      <link>http://example.org/tags/ctf/</link>
+      <pubDate>Wed, 05 Feb 2020 23:38:42 +0100</pubDate>
+      
+      <guid>http://example.org/tags/ctf/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>web</title>
+      <link>http://example.org/tags/web/</link>
+      <pubDate>Wed, 05 Feb 2020 23:38:42 +0100</pubDate>
+      
+      <guid>http://example.org/tags/web/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>xss</title>
+      <link>http://example.org/tags/xss/</link>
+      <pubDate>Wed, 05 Feb 2020 23:38:42 +0100</pubDate>
+      
+      <guid>http://example.org/tags/xss/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>

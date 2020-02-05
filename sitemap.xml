@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  
+  <url>
+    <loc>http://example.org/</loc>
+    <lastmod>2020-02-05T23:43:53+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://example.org/tags/c#/</loc>
+    <lastmod>2020-02-05T23:43:53+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://example.org/tags/confuserex/</loc>
+    <lastmod>2020-02-05T23:43:53+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://example.org/tags/dnspy/</loc>
+    <lastmod>2020-02-05T23:43:53+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://example.org/tags/dotnet/</loc>
+    <lastmod>2020-02-05T23:43:53+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://example.org/posts/kipodafterfree2019-package2/</loc>
+    <lastmod>2020-02-05T23:43:53+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://example.org/tags/obfuscation/</loc>
+    <lastmod>2020-02-05T23:43:53+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://example.org/tags/packer/</loc>
+    <lastmod>2020-02-05T23:43:53+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://example.org/posts/</loc>
+    <lastmod>2020-02-05T23:43:53+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://example.org/tags/re/</loc>
+    <lastmod>2020-02-05T23:43:53+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://example.org/tags/</loc>
+    <lastmod>2020-02-05T23:43:53+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://example.org/tags/csp/</loc>
+    <lastmod>2020-02-05T23:38:42+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://example.org/tags/csp-injection/</loc>
+    <lastmod>2020-02-05T23:38:42+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://example.org/tags/ctf/</loc>
+    <lastmod>2020-02-05T23:38:42+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://example.org/posts/kipodafterfree2019-postman/</loc>
+    <lastmod>2020-02-05T23:38:42+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://example.org/tags/web/</loc>
+    <lastmod>2020-02-05T23:38:42+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://example.org/tags/xss/</loc>
+    <lastmod>2020-02-05T23:38:42+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://example.org/about/</loc>
+    <lastmod>2020-02-05T22:57:46+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://example.org/categories/</loc>
+  </url>
+  
+</urlset>
