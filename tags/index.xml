@@ -6,10 +6,55 @@
     <description>Recent content in Tags on bilith&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 05 Feb 2020 23:43:53 +0100</lastBuildDate>
+    <lastBuildDate>Mon, 17 Feb 2020 23:10:00 +0100</lastBuildDate>
     
 	<atom:link href="https://billith.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>ctf</title>
+      <link>https://billith.github.io/tags/ctf/</link>
+      <pubDate>Mon, 17 Feb 2020 23:10:00 +0100</pubDate>
+      
+      <guid>https://billith.github.io/tags/ctf/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>injection</title>
+      <link>https://billith.github.io/tags/injection/</link>
+      <pubDate>Mon, 17 Feb 2020 23:10:00 +0100</pubDate>
+      
+      <guid>https://billith.github.io/tags/injection/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>query</title>
+      <link>https://billith.github.io/tags/query/</link>
+      <pubDate>Mon, 17 Feb 2020 23:10:00 +0100</pubDate>
+      
+      <guid>https://billith.github.io/tags/query/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>solr</title>
+      <link>https://billith.github.io/tags/solr/</link>
+      <pubDate>Mon, 17 Feb 2020 23:10:00 +0100</pubDate>
+      
+      <guid>https://billith.github.io/tags/solr/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>web</title>
+      <link>https://billith.github.io/tags/web/</link>
+      <pubDate>Mon, 17 Feb 2020 23:10:00 +0100</pubDate>
+      
+      <guid>https://billith.github.io/tags/web/</guid>
+      <description></description>
+    </item>
     
     <item>
       <title>C#</title>
@@ -89,24 +134,6 @@
       <pubDate>Wed, 05 Feb 2020 23:38:42 +0100</pubDate>
       
       <guid>https://billith.github.io/tags/csp-injection/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>ctf</title>
-      <link>https://billith.github.io/tags/ctf/</link>
-      <pubDate>Wed, 05 Feb 2020 23:38:42 +0100</pubDate>
-      
-      <guid>https://billith.github.io/tags/ctf/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>web</title>
-      <link>https://billith.github.io/tags/web/</link>
-      <pubDate>Wed, 05 Feb 2020 23:38:42 +0100</pubDate>
-      
-      <guid>https://billith.github.io/tags/web/</guid>
       <description></description>
     </item>
     
