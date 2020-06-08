@@ -6,9 +6,163 @@
     <description>Recent content in Tags on bilith&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
+    <lastBuildDate>Sun, 01 Mar 2020 00:37:22 +0100</lastBuildDate>
     
 	<atom:link href="https://billith.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>htb</title>
+      <link>https://billith.github.io/tags/htb/</link>
+      <pubDate>Sun, 01 Mar 2020 00:37:22 +0100</pubDate>
+      
+      <guid>https://billith.github.io/tags/htb/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>re</title>
+      <link>https://billith.github.io/tags/re/</link>
+      <pubDate>Sun, 01 Mar 2020 00:37:22 +0100</pubDate>
+      
+      <guid>https://billith.github.io/tags/re/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>upx</title>
+      <link>https://billith.github.io/tags/upx/</link>
+      <pubDate>Sun, 01 Mar 2020 00:37:22 +0100</pubDate>
+      
+      <guid>https://billith.github.io/tags/upx/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>ctf</title>
+      <link>https://billith.github.io/tags/ctf/</link>
+      <pubDate>Mon, 17 Feb 2020 23:10:00 +0100</pubDate>
+      
+      <guid>https://billith.github.io/tags/ctf/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>injection</title>
+      <link>https://billith.github.io/tags/injection/</link>
+      <pubDate>Mon, 17 Feb 2020 23:10:00 +0100</pubDate>
+      
+      <guid>https://billith.github.io/tags/injection/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>query</title>
+      <link>https://billith.github.io/tags/query/</link>
+      <pubDate>Mon, 17 Feb 2020 23:10:00 +0100</pubDate>
+      
+      <guid>https://billith.github.io/tags/query/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>solr</title>
+      <link>https://billith.github.io/tags/solr/</link>
+      <pubDate>Mon, 17 Feb 2020 23:10:00 +0100</pubDate>
+      
+      <guid>https://billith.github.io/tags/solr/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>web</title>
+      <link>https://billith.github.io/tags/web/</link>
+      <pubDate>Mon, 17 Feb 2020 23:10:00 +0100</pubDate>
+      
+      <guid>https://billith.github.io/tags/web/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>C#</title>
+      <link>https://billith.github.io/tags/c#/</link>
+      <pubDate>Wed, 05 Feb 2020 23:43:53 +0100</pubDate>
+      
+      <guid>https://billith.github.io/tags/c#/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>confuserex</title>
+      <link>https://billith.github.io/tags/confuserex/</link>
+      <pubDate>Wed, 05 Feb 2020 23:43:53 +0100</pubDate>
+      
+      <guid>https://billith.github.io/tags/confuserex/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>dnspy</title>
+      <link>https://billith.github.io/tags/dnspy/</link>
+      <pubDate>Wed, 05 Feb 2020 23:43:53 +0100</pubDate>
+      
+      <guid>https://billith.github.io/tags/dnspy/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>dotnet</title>
+      <link>https://billith.github.io/tags/dotnet/</link>
+      <pubDate>Wed, 05 Feb 2020 23:43:53 +0100</pubDate>
+      
+      <guid>https://billith.github.io/tags/dotnet/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>obfuscation</title>
+      <link>https://billith.github.io/tags/obfuscation/</link>
+      <pubDate>Wed, 05 Feb 2020 23:43:53 +0100</pubDate>
+      
+      <guid>https://billith.github.io/tags/obfuscation/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>packer</title>
+      <link>https://billith.github.io/tags/packer/</link>
+      <pubDate>Wed, 05 Feb 2020 23:43:53 +0100</pubDate>
+      
+      <guid>https://billith.github.io/tags/packer/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>csp</title>
+      <link>https://billith.github.io/tags/csp/</link>
+      <pubDate>Wed, 05 Feb 2020 23:38:42 +0100</pubDate>
+      
+      <guid>https://billith.github.io/tags/csp/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>csp injection</title>
+      <link>https://billith.github.io/tags/csp-injection/</link>
+      <pubDate>Wed, 05 Feb 2020 23:38:42 +0100</pubDate>
+      
+      <guid>https://billith.github.io/tags/csp-injection/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>xss</title>
+      <link>https://billith.github.io/tags/xss/</link>
+      <pubDate>Wed, 05 Feb 2020 23:38:42 +0100</pubDate>
+      
+      <guid>https://billith.github.io/tags/xss/</guid>
+      <description></description>
+    </item>
     
   </channel>
 </rss>

@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>bilith&#39;s blog</title>
-    <link>https://billith.github.io/</link>
-    <description>Recent content on bilith&#39;s blog</description>
+    <title>Posts on bilith&#39;s blog</title>
+    <link>https://billith.github.io/posts/</link>
+    <description>Recent content in Posts on bilith&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Sun, 01 Mar 2020 00:37:22 +0100</lastBuildDate>
     
-	<atom:link href="https://billith.github.io/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://billith.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
@@ -50,15 +50,6 @@ To decompile this binary I used dnSpy. When I loaded it to the decompiler I saw 
       <guid>https://billith.github.io/posts/kipodafterfree2019-postman/</guid>
       <description>PostMan [web, 70p, 12 solves] TLDR; simple XSS which was blocked by CSP. You needed to inject into CSP header to get XSS working.
 The application let user to create posts with a title and an image. Image had to be passed in form of a link. You could report post to the admin who will inspect it (typical XSS challange). Right of a bat I found simple XSS in title field &amp;lt;script&amp;gt;alert(1)&amp;lt;/script&amp;gt;, but it was blocked due to CSP header that server set in the response:</description>
-    </item>
-    
-    <item>
-      <title>About</title>
-      <link>https://billith.github.io/about/</link>
-      <pubDate>Wed, 05 Feb 2020 22:57:46 +0100</pubDate>
-      
-      <guid>https://billith.github.io/about/</guid>
-      <description>Just another &amp;ldquo;ambitious&amp;rdquo; hacker running IT security related blog. Things I will be writing about are web, reverse engineering, binary exploitation, HTB writeups and maybe some malware related stuff.</description>
     </item>
     
   </channel>

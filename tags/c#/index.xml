@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>C# on bilith&#39;s blog</title>
+    <link>https://billith.github.io/tags/c#/</link>
+    <description>Recent content in C# on bilith&#39;s blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 05 Feb 2020 23:43:53 +0100</lastBuildDate>
+    
+	<atom:link href="https://billith.github.io/tags/c#/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>KipodAfterFree2019 Package2</title>
+      <link>https://billith.github.io/posts/kipodafterfree2019-package2/</link>
+      <pubDate>Wed, 05 Feb 2020 23:43:53 +0100</pubDate>
+      
+      <guid>https://billith.github.io/posts/kipodafterfree2019-package2/</guid>
+      <description>Package2 [re, 20p, 27 solves] TLDR; obfuscated .Net binary which was decrypting hardcoded, encrypted password with hardcoded key. I used avaliable deobfuscator, did some reversing, found encypted password and hardcoded key and wrote simple python script that decrypted it.
+To decompile this binary I used dnSpy. When I loaded it to the decompiler I saw that function and variables names are obfustaced and consists of unicode characters like \u200C\u200B\u202E\u206C\u202C\u202B\u202D.... After looking around for a bit I found interesting thing in binary metadata:</description>
+    </item>
+    
+  </channel>
+</rss>

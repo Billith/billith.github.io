@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    
+    <meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="chrome=1">
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="referrer" content="no-referrer">
+
+<title>
+    KipodAfterFree2019 Package2 - bilith&rsquo;s blog
+</title>
+
+
+<link rel="shortcut icon" href="/icon.png">
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/css/main.min.6c0abcd1087fe217d3a9b27c7ffc25e2ed45b118b5ae71e55a4c5fc80a56a746.css" integrity="sha256-bAq80Qh/4hfTqbJ8f/wl4u1FsRi1rnHlWkxfyApWp0Y=" crossorigin="anonymous" media="screen">
+
+
+
+
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Didact+Gothic">
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="KipodAfterFree2019 Package2"/>
+<meta name="twitter:description" content="Package2 [re, 20p, 27 solves] TLDR; obfuscated .Net binary which was decrypting hardcoded, encrypted password with hardcoded key. I used avaliable deobfuscator, did some reversing, found encypted password and hardcoded key and wrote simple python script that decrypted it.
+To decompile this binary I used dnSpy. When I loaded it to the decompiler I saw that function and variables names are obfustaced and consists of unicode characters like \u200C\u200B\u202E\u206C\u202C\u202B\u202D.... After looking around for a bit I found interesting thing in binary metadata:"/>
+
+<meta property="og:title" content="KipodAfterFree2019 Package2" />
+<meta property="og:description" content="Package2 [re, 20p, 27 solves] TLDR; obfuscated .Net binary which was decrypting hardcoded, encrypted password with hardcoded key. I used avaliable deobfuscator, did some reversing, found encypted password and hardcoded key and wrote simple python script that decrypted it.
+To decompile this binary I used dnSpy. When I loaded it to the decompiler I saw that function and variables names are obfustaced and consists of unicode characters like \u200C\u200B\u202E\u206C\u202C\u202B\u202D.... After looking around for a bit I found interesting thing in binary metadata:" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://billith.github.io/posts/kipodafterfree2019-package2/" />
+<meta property="article:published_time" content="2020-02-05T23:43:53+01:00" />
+<meta property="article:modified_time" content="2020-02-05T23:43:53+01:00" />
+
+
+    
+
+    
+    
+    
+    <title>
+        
+        KipodAfterFree2019 Package2
+        
+    </title>
+</head>
+
+<body>
+    
+    
+    <header class="wrap flex-container">
+        <h1>KipodAfterFree2019 Package2</h1>
+    </header>
+    
+    <main class="wrap">
+        
+<div class="flex-container">
+    <aside role="complementary">
+        Wed Feb 05, 2020 &#183; 659 words
+        <div class="tag-container">
+            
+            
+            <span class="tag">
+                <a href="/tags/re/">
+                    re
+                </a>
+            </span>
+            
+            
+            
+            <span class="tag">
+                <a href="/tags/dotnet/">
+                    dotnet
+                </a>
+            </span>
+            
+            
+            
+            
+            
+            <span class="tag">
+                <a href="/tags/obfuscation/">
+                    obfuscation
+                </a>
+            </span>
+            
+            
+            
+            <span class="tag">
+                <a href="/tags/packer/">
+                    packer
+                </a>
+            </span>
+            
+            
+            
+            <span class="tag">
+                <a href="/tags/confuserex/">
+                    confuserex
+                </a>
+            </span>
+            
+            
+            
+            <span class="tag">
+                <a href="/tags/dnspy/">
+                    dnspy
+                </a>
+            </span>
+            
+            
+        </div>
+    </aside>
+    <hr />
+    <article role="article">
+        <h1 id="package2">Package2</h1>
+<h4 id="re-20p-27-solves">[re, 20p, 27 solves]</h4>
+<p><strong>TLDR</strong>; obfuscated .Net binary which was decrypting hardcoded, encrypted password with hardcoded key. I used avaliable deobfuscator, did some reversing, found encypted password and hardcoded key and wrote simple python script that decrypted it.</p>
+<p>To decompile this binary I used dnSpy. When I loaded it to the decompiler I saw that function and variables names are obfustaced and consists of unicode characters like <code>\u200C\u200B\u202E\u206C\u202C\u202B\u202D...</code>. After looking around for a bit I found interesting thing in binary metadata:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c#" data-lang="c#"><span style="color:#75715e">// C:\Users\bilith\Package2.exe
+</span><span style="color:#75715e">// WpfApp1.exe
+</span><span style="color:#75715e"></span>
+<span style="color:#75715e">// Global type: &lt;Module&gt;
+</span><span style="color:#75715e">// Entry point: &lt;Module&gt;.\u206B\u202E\u206D\u206E\u200D\u200D\u202A\u202D\u202A\u200C\u206F\u206B\u206A\u202A\u206C\u206B\u206B\u200D\u202A\u200C\u200C\u206D\u200B\u206C\u202C\u206D\u206E\u206D\u202A\u202B\u202E\u200B\u206A\u200C\u200B\u200B\u202D\u200D\u206E\u202A\u202E
+</span><span style="color:#75715e">// Architecture: AnyCPU (32-bit preferred)
+</span><span style="color:#75715e">// Runtime: .NET Framework 4.7.2
+</span><span style="color:#75715e">// Timestamp: 5DF7894A (12/16/2019 5:40:26 AM)
+</span><span style="color:#75715e"></span>
+<span style="color:#66d9ef">using</span> System;
+<span style="color:#66d9ef">using</span> System.Runtime.CompilerServices;
+<span style="color:#a6e22e">
+</span><span style="color:#a6e22e">[module: SuppressIldasm]</span>
+<span style="color:#a6e22e">[module: ConfusedBy(&#34;ConfuserEx v1.0.0&#34;)]</span>
+</code></pre></div><p>After some research I found out that ConfuserEx is an obfuscator/protector for .Net binaries. So I started looking for deobfuscator. I googled for <code>ConfuserEx unpacker</code> and got couple results, however the first one I tried, crashed during deobsucation. I finally found <a href="https://github.com/XenocodeRCE/ConfuserEx-Unpacker">working one</a> on tuts4you forum and I was able to slightly clean this binary.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-powershell" data-lang="powershell">C:\Users\bilith\1.0&gt;<span style="color:#e6db74">&#34;ConfuserEx Dynamic Unpacker.exe&#34;</span> -s Package22.exe
+Yeah confuserex unpacker so what
+[!] Anti Tamper Detected
+[!] Anti Tamper Removed Successfully
+[!] Compressor Detected
+[!] Compressor Removed Successfully
+[!] Now Cleaning The koi Module
+[!] Anti Tamper Detected
+[!] Anti Tamper Removed Successfully
+[!] Cleaning Proxy Calls
+[!] Amount Of Proxy Calls Fixed<span style="color:#960050;background-color:#1e0010">:</span> 58
+[!] Decrytping Strings
+[!] Amount Of Strings Decrypted<span style="color:#960050;background-color:#1e0010">:</span> 12
+C:\Users\bilith\1.0&gt;
+</code></pre></div><p>After that I was able to see more modules or classes (not sure about that term). After looking throught still kinda obfuscated code I found interesting part (I removed not relevant code for better readability):</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c#" data-lang="c#"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">nKYbeWzkWqgYIelUsfuLWBeKzhqjA</span> : Window, IComponentConnector
+{
+	<span style="color:#66d9ef">public</span> nKYbeWzkWqgYIelUsfuLWBeKzhqjA()
+	{
+		<span style="color:#66d9ef">this</span>.InitializeComponent();
+		<span style="color:#66d9ef">new</span> Button
+		{
+			Name = <span style="color:#e6db74">&#34;btn1&#34;</span>
+		}.Click += <span style="color:#66d9ef">this</span>.<span style="color:#960050;background-color:#1e0010">\</span>u206C<span style="color:#960050;background-color:#1e0010">\</span>u206A<span style="color:#960050;background-color:#1e0010">\</span>u202A<span style="color:#960050;background-color:#1e0010">\</span>u200B<span style="color:#960050;background-color:#1e0010">\</span>u206E<span style="color:#960050;background-color:#1e0010">\</span>u200C<span style="color:#960050;background-color:#1e0010">\</span>u200D<span style="color:#960050;background-color:#1e0010">\</span>u200F<span style="color:#960050;background-color:#1e0010">\</span>u202B<span style="color:#960050;background-color:#1e0010">\</span>u202D<span style="color:#960050;background-color:#1e0010">\</span>u200F<span style="color:#960050;background-color:#1e0010">\</span>u202E<span style="color:#960050;background-color:#1e0010">\</span>u206C<span style="color:#960050;background-color:#1e0010">\</span>u206D<span style="color:#960050;background-color:#1e0010">\</span>u206C<span style="color:#960050;background-color:#1e0010">\</span>u200C<span style="color:#960050;background-color:#1e0010">\</span>u202C<span style="color:#960050;background-color:#1e0010">\</span>u206D<span style="color:#960050;background-color:#1e0010">\</span>u200D<span style="color:#960050;background-color:#1e0010">\</span>u206B<span style="color:#960050;background-color:#1e0010">\</span>u200B<span style="color:#960050;background-color:#1e0010">\</span>u200B<span style="color:#960050;background-color:#1e0010">\</span>u200D<span style="color:#960050;background-color:#1e0010">\</span>u200B<span style="color:#960050;background-color:#1e0010">\</span>u202A<span style="color:#960050;background-color:#1e0010">\</span>u202D<span style="color:#960050;background-color:#1e0010">\</span>u200B<span style="color:#960050;background-color:#1e0010">\</span>u202E<span style="color:#960050;background-color:#1e0010">\</span>u200F<span style="color:#960050;background-color:#1e0010">\</span>u200E<span style="color:#960050;background-color:#1e0010">\</span>u202C<span style="color:#960050;background-color:#1e0010">\</span>u202A<span style="color:#960050;background-color:#1e0010">\</span>u206D<span style="color:#960050;background-color:#1e0010">\</span>u206E<span style="color:#960050;background-color:#1e0010">\</span>u202A<span style="color:#960050;background-color:#1e0010">\</span>u206D<span style="color:#960050;background-color:#1e0010">\</span>u202D<span style="color:#960050;background-color:#1e0010">\</span>u206B<span style="color:#960050;background-color:#1e0010">\</span>u206F<span style="color:#960050;background-color:#1e0010">\</span>u202C<span style="color:#960050;background-color:#1e0010">\</span>u202E;
+	}
+
+	<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">string</span> <span style="color:#960050;background-color:#1e0010">\</span>u206F<span style="color:#960050;background-color:#1e0010">\</span>u206A<span style="color:#960050;background-color:#1e0010">\</span>u202B<span style="color:#960050;background-color:#1e0010">\</span>u202B<span style="color:#960050;background-color:#1e0010">\</span>u202D<span style="color:#960050;background-color:#1e0010">\</span>u200C<span style="color:#960050;background-color:#1e0010">\</span>u202B<span style="color:#960050;background-color:#1e0010">\</span>u200F<span style="color:#960050;background-color:#1e0010">\</span>u202E<span style="color:#960050;background-color:#1e0010">\</span>u200D<span style="color:#960050;background-color:#1e0010">\</span>u200D<span style="color:#960050;background-color:#1e0010">\</span>u206D<span style="color:#960050;background-color:#1e0010">\</span>u200C<span style="color:#960050;background-color:#1e0010">\</span>u206B<span style="color:#960050;background-color:#1e0010">\</span>u202D<span style="color:#960050;background-color:#1e0010">\</span>u202E<span style="color:#960050;background-color:#1e0010">\</span>u206E<span style="color:#960050;background-color:#1e0010">\</span>u206F<span style="color:#960050;background-color:#1e0010">\</span>u206D<span style="color:#960050;background-color:#1e0010">\</span>u202A<span style="color:#960050;background-color:#1e0010">\</span>u202B<span style="color:#960050;background-color:#1e0010">\</span>u200F<span style="color:#960050;background-color:#1e0010">\</span>u206F<span style="color:#960050;background-color:#1e0010">\</span>u206F<span style="color:#960050;background-color:#1e0010">\</span>u200F<span style="color:#960050;background-color:#1e0010">\</span>u200E<span style="color:#960050;background-color:#1e0010">\</span>u206F<span style="color:#960050;background-color:#1e0010">\</span>u206A<span style="color:#960050;background-color:#1e0010">\</span>u206E<span style="color:#960050;background-color:#1e0010">\</span>u202A<span style="color:#960050;background-color:#1e0010">\</span>u200C<span style="color:#960050;background-color:#1e0010">\</span>u202D<span style="color:#960050;background-color:#1e0010">\</span>u202B<span style="color:#960050;background-color:#1e0010">\</span>u202B<span style="color:#960050;background-color:#1e0010">\</span>u202C<span style="color:#960050;background-color:#1e0010">\</span>u206A<span style="color:#960050;background-color:#1e0010">\</span>u200D<span style="color:#960050;background-color:#1e0010">\</span>u200B<span style="color:#960050;background-color:#1e0010">\</span>u202A<span style="color:#960050;background-color:#1e0010">\</span>u202A<span style="color:#960050;background-color:#1e0010">\</span>u202E(<span style="color:#66d9ef">string</span> A_1, <span style="color:#66d9ef">string</span> A_2)
+	{
+		<span style="color:#66d9ef">byte</span>[] array = Convert.FromBase64String(A_1);
+		TripleDESCryptoServiceProvider tripleDESCryptoServiceProvider = <span style="color:#66d9ef">new</span> TripleDESCryptoServiceProvider();
+		tripleDESCryptoServiceProvider.Key = Encoding.UTF8.GetBytes(A_2);
+		tripleDESCryptoServiceProvider.Mode = CipherMode.ECB;
+		tripleDESCryptoServiceProvider.Padding = PaddingMode.PKCS7;
+		<span style="color:#66d9ef">byte</span>[] bytes = tripleDESCryptoServiceProvider.CreateDecryptor().TransformFinalBlock(array, <span style="color:#ae81ff">0</span>, array.Length);
+		tripleDESCryptoServiceProvider.Clear();
+		<span style="color:#66d9ef">return</span> Encoding.UTF8.GetString(bytes);
+	}
+ 
+	<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> <span style="color:#960050;background-color:#1e0010">\</span>u206C<span style="color:#960050;background-color:#1e0010">\</span>u206A<span style="color:#960050;background-color:#1e0010">\</span>u202A<span style="color:#960050;background-color:#1e0010">\</span>u200B<span style="color:#960050;background-color:#1e0010">\</span>u206E<span style="color:#960050;background-color:#1e0010">\</span>u200C<span style="color:#960050;background-color:#1e0010">\</span>u200D<span style="color:#960050;background-color:#1e0010">\</span>u200F<span style="color:#960050;background-color:#1e0010">\</span>u202B<span style="color:#960050;background-color:#1e0010">\</span>u202D<span style="color:#960050;background-color:#1e0010">\</span>u200F<span style="color:#960050;background-color:#1e0010">\</span>u202E<span style="color:#960050;background-color:#1e0010">\</span>u206C<span style="color:#960050;background-color:#1e0010">\</span>u206D<span style="color:#960050;background-color:#1e0010">\</span>u206C<span style="color:#960050;background-color:#1e0010">\</span>u200C<span style="color:#960050;background-color:#1e0010">\</span>u202C<span style="color:#960050;background-color:#1e0010">\</span>u206D<span style="color:#960050;background-color:#1e0010">\</span>u200D<span style="color:#960050;background-color:#1e0010">\</span>u206B<span style="color:#960050;background-color:#1e0010">\</span>u200B<span style="color:#960050;background-color:#1e0010">\</span>u200B<span style="color:#960050;background-color:#1e0010">\</span>u200D<span style="color:#960050;background-color:#1e0010">\</span>u200B<span style="color:#960050;background-color:#1e0010">\</span>u202A<span style="color:#960050;background-color:#1e0010">\</span>u202D<span style="color:#960050;background-color:#1e0010">\</span>u200B<span style="color:#960050;background-color:#1e0010">\</span>u202E<span style="color:#960050;background-color:#1e0010">\</span>u200F<span style="color:#960050;background-color:#1e0010">\</span>u200E<span style="color:#960050;background-color:#1e0010">\</span>u202C<span style="color:#960050;background-color:#1e0010">\</span>u202A<span style="color:#960050;background-color:#1e0010">\</span>u206D<span style="color:#960050;background-color:#1e0010">\</span>u206E<span style="color:#960050;background-color:#1e0010">\</span>u202A<span style="color:#960050;background-color:#1e0010">\</span>u206D<span style="color:#960050;background-color:#1e0010">\</span>u202D<span style="color:#960050;background-color:#1e0010">\</span>u206B<span style="color:#960050;background-color:#1e0010">\</span>u206F<span style="color:#960050;background-color:#1e0010">\</span>u202C<span style="color:#960050;background-color:#1e0010">\</span>u202E(<span style="color:#66d9ef">object</span> A_1, RoutedEventArgs A_2)
+	{
+		<span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> num = <span style="color:#ae81ff">138344687</span>; num == <span style="color:#ae81ff">138344687</span>; num = <span style="color:#ae81ff">397736</span>)
+		{
+		}
+		<span style="color:#66d9ef">string</span> text = <span style="color:#66d9ef">this</span>.<span style="color:#960050;background-color:#1e0010">\</span>u200E<span style="color:#960050;background-color:#1e0010">\</span>u200F<span style="color:#960050;background-color:#1e0010">\</span>u206D<span style="color:#960050;background-color:#1e0010">\</span>u200F<span style="color:#960050;background-color:#1e0010">\</span>u206D<span style="color:#960050;background-color:#1e0010">\</span>u206D<span style="color:#960050;background-color:#1e0010">\</span>u206D<span style="color:#960050;background-color:#1e0010">\</span>u206F<span style="color:#960050;background-color:#1e0010">\</span>u200C<span style="color:#960050;background-color:#1e0010">\</span>u200E<span style="color:#960050;background-color:#1e0010">\</span>u206A<span style="color:#960050;background-color:#1e0010">\</span>u202B<span style="color:#960050;background-color:#1e0010">\</span>u200E<span style="color:#960050;background-color:#1e0010">\</span>u200E<span style="color:#960050;background-color:#1e0010">\</span>u206B<span style="color:#960050;background-color:#1e0010">\</span>u200F<span style="color:#960050;background-color:#1e0010">\</span>u206A<span style="color:#960050;background-color:#1e0010">\</span>u206B<span style="color:#960050;background-color:#1e0010">\</span>u200D<span style="color:#960050;background-color:#1e0010">\</span>u206F<span style="color:#960050;background-color:#1e0010">\</span>u200C<span style="color:#960050;background-color:#1e0010">\</span>u206C<span style="color:#960050;background-color:#1e0010">\</span>u206E<span style="color:#960050;background-color:#1e0010">\</span>u200F<span style="color:#960050;background-color:#1e0010">\</span>u200F<span style="color:#960050;background-color:#1e0010">\</span>u202C<span style="color:#960050;background-color:#1e0010">\</span>u202C<span style="color:#960050;background-color:#1e0010">\</span>u202A<span style="color:#960050;background-color:#1e0010">\</span>u206A<span style="color:#960050;background-color:#1e0010">\</span>u200C<span style="color:#960050;background-color:#1e0010">\</span>u206D<span style="color:#960050;background-color:#1e0010">\</span>u200D<span style="color:#960050;background-color:#1e0010">\</span>u206F<span style="color:#960050;background-color:#1e0010">\</span>u206E<span style="color:#960050;background-color:#1e0010">\</span>u202E<span style="color:#960050;background-color:#1e0010">\</span>u200F<span style="color:#960050;background-color:#1e0010">\</span>u200F<span style="color:#960050;background-color:#1e0010">\</span>u202A<span style="color:#960050;background-color:#1e0010">\</span>u202D<span style="color:#960050;background-color:#1e0010">\</span>u206A<span style="color:#960050;background-color:#1e0010">\</span>u202E.Text;
+		<span style="color:#66d9ef">string</span> text2 = <span style="color:#66d9ef">this</span>.<span style="color:#960050;background-color:#1e0010">\</span>u202D<span style="color:#960050;background-color:#1e0010">\</span>u202E<span style="color:#960050;background-color:#1e0010">\</span>u200C<span style="color:#960050;background-color:#1e0010">\</span>u202B<span style="color:#960050;background-color:#1e0010">\</span>u202A<span style="color:#960050;background-color:#1e0010">\</span>u202D<span style="color:#960050;background-color:#1e0010">\</span>u206F<span style="color:#960050;background-color:#1e0010">\</span>u200B<span style="color:#960050;background-color:#1e0010">\</span>u206D<span style="color:#960050;background-color:#1e0010">\</span>u206E<span style="color:#960050;background-color:#1e0010">\</span>u206F<span style="color:#960050;background-color:#1e0010">\</span>u202C<span style="color:#960050;background-color:#1e0010">\</span>u206B<span style="color:#960050;background-color:#1e0010">\</span>u202E<span style="color:#960050;background-color:#1e0010">\</span>u200B<span style="color:#960050;background-color:#1e0010">\</span>u202B<span style="color:#960050;background-color:#1e0010">\</span>u206D<span style="color:#960050;background-color:#1e0010">\</span>u200D<span style="color:#960050;background-color:#1e0010">\</span>u200E<span style="color:#960050;background-color:#1e0010">\</span>u206E<span style="color:#960050;background-color:#1e0010">\</span>u206E<span style="color:#960050;background-color:#1e0010">\</span>u200C<span style="color:#960050;background-color:#1e0010">\</span>u200B<span style="color:#960050;background-color:#1e0010">\</span>u206B<span style="color:#960050;background-color:#1e0010">\</span>u206B<span style="color:#960050;background-color:#1e0010">\</span>u206B<span style="color:#960050;background-color:#1e0010">\</span>u200E<span style="color:#960050;background-color:#1e0010">\</span>u200C<span style="color:#960050;background-color:#1e0010">\</span>u200D<span style="color:#960050;background-color:#1e0010">\</span>u202C<span style="color:#960050;background-color:#1e0010">\</span>u200C<span style="color:#960050;background-color:#1e0010">\</span>u206A<span style="color:#960050;background-color:#1e0010">\</span>u202A<span style="color:#960050;background-color:#1e0010">\</span>u206B<span style="color:#960050;background-color:#1e0010">\</span>u206A<span style="color:#960050;background-color:#1e0010">\</span>u206A<span style="color:#960050;background-color:#1e0010">\</span>u202B<span style="color:#960050;background-color:#1e0010">\</span>u206A<span style="color:#960050;background-color:#1e0010">\</span>u200C<span style="color:#960050;background-color:#1e0010">\</span>u206B<span style="color:#960050;background-color:#1e0010">\</span>u202E.Text;
+		<span style="color:#66d9ef">this</span>.<span style="color:#960050;background-color:#1e0010">\</span>u200F<span style="color:#960050;background-color:#1e0010">\</span>u200E<span style="color:#960050;background-color:#1e0010">\</span>u202D<span style="color:#960050;background-color:#1e0010">\</span>u200C<span style="color:#960050;background-color:#1e0010">\</span>u206B<span style="color:#960050;background-color:#1e0010">\</span>u202B<span style="color:#960050;background-color:#1e0010">\</span>u200F<span style="color:#960050;background-color:#1e0010">\</span>u206B<span style="color:#960050;background-color:#1e0010">\</span>u206F<span style="color:#960050;background-color:#1e0010">\</span>u202A<span style="color:#960050;background-color:#1e0010">\</span>u202B<span style="color:#960050;background-color:#1e0010">\</span>u202C<span style="color:#960050;background-color:#1e0010">\</span>u206B<span style="color:#960050;background-color:#1e0010">\</span>u200E<span style="color:#960050;background-color:#1e0010">\</span>u206A<span style="color:#960050;background-color:#1e0010">\</span>u206B<span style="color:#960050;background-color:#1e0010">\</span>u200C<span style="color:#960050;background-color:#1e0010">\</span>u206B<span style="color:#960050;background-color:#1e0010">\</span>u206A<span style="color:#960050;background-color:#1e0010">\</span>u200F<span style="color:#960050;background-color:#1e0010">\</span>u202B<span style="color:#960050;background-color:#1e0010">\</span>u206E<span style="color:#960050;background-color:#1e0010">\</span>u206D<span style="color:#960050;background-color:#1e0010">\</span>u200F<span style="color:#960050;background-color:#1e0010">\</span>u200C<span style="color:#960050;background-color:#1e0010">\</span>u202C<span style="color:#960050;background-color:#1e0010">\</span>u202D<span style="color:#960050;background-color:#1e0010">\</span>u200B<span style="color:#960050;background-color:#1e0010">\</span>u202D<span style="color:#960050;background-color:#1e0010">\</span>u200C<span style="color:#960050;background-color:#1e0010">\</span>u202A<span style="color:#960050;background-color:#1e0010">\</span>u202E<span style="color:#960050;background-color:#1e0010">\</span>u200D<span style="color:#960050;background-color:#1e0010">\</span>u202A<span style="color:#960050;background-color:#1e0010">\</span>u206F<span style="color:#960050;background-color:#1e0010">\</span>u202B<span style="color:#960050;background-color:#1e0010">\</span>u202D<span style="color:#960050;background-color:#1e0010">\</span>u200F<span style="color:#960050;background-color:#1e0010">\</span>u202B<span style="color:#960050;background-color:#1e0010">\</span>u200F<span style="color:#960050;background-color:#1e0010">\</span>u202E(text);
+	}
+
+	<span style="color:#75715e">//(...)
+</span><span style="color:#75715e"></span>
+	<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> <span style="color:#960050;background-color:#1e0010">\</span>u202A<span style="color:#960050;background-color:#1e0010">\</span>u202C<span style="color:#960050;background-color:#1e0010">\</span>u206A<span style="color:#960050;background-color:#1e0010">\</span>u202C<span style="color:#960050;background-color:#1e0010">\</span>u200C<span style="color:#960050;background-color:#1e0010">\</span>u200D<span style="color:#960050;background-color:#1e0010">\</span>u200D<span style="color:#960050;background-color:#1e0010">\</span>u200F<span style="color:#960050;background-color:#1e0010">\</span>u200B<span style="color:#960050;background-color:#1e0010">\</span>u206A<span style="color:#960050;background-color:#1e0010">\</span>u202B<span style="color:#960050;background-color:#1e0010">\</span>u202C<span style="color:#960050;background-color:#1e0010">\</span>u200F<span style="color:#960050;background-color:#1e0010">\</span>u206C<span style="color:#960050;background-color:#1e0010">\</span>u202B<span style="color:#960050;background-color:#1e0010">\</span>u206B<span style="color:#960050;background-color:#1e0010">\</span>u200C<span style="color:#960050;background-color:#1e0010">\</span>u206F<span style="color:#960050;background-color:#1e0010">\</span>u202A<span style="color:#960050;background-color:#1e0010">\</span>u202B<span style="color:#960050;background-color:#1e0010">\</span>u200F<span style="color:#960050;background-color:#1e0010">\</span>u206A<span style="color:#960050;background-color:#1e0010">\</span>u206E<span style="color:#960050;background-color:#1e0010">\</span>u200B<span style="color:#960050;background-color:#1e0010">\</span>u200C<span style="color:#960050;background-color:#1e0010">\</span>u206F<span style="color:#960050;background-color:#1e0010">\</span>u206F<span style="color:#960050;background-color:#1e0010">\</span>u206F<span style="color:#960050;background-color:#1e0010">\</span>u206A<span style="color:#960050;background-color:#1e0010">\</span>u200B<span style="color:#960050;background-color:#1e0010">\</span>u206F<span style="color:#960050;background-color:#1e0010">\</span>u200E<span style="color:#960050;background-color:#1e0010">\</span>u202B<span style="color:#960050;background-color:#1e0010">\</span>u202A<span style="color:#960050;background-color:#1e0010">\</span>u200E<span style="color:#960050;background-color:#1e0010">\</span>u202D<span style="color:#960050;background-color:#1e0010">\</span>u200E<span style="color:#960050;background-color:#1e0010">\</span>u206C<span style="color:#960050;background-color:#1e0010">\</span>u206B<span style="color:#960050;background-color:#1e0010">\</span>u202E(<span style="color:#66d9ef">string</span> A_1)
+	{
+		<span style="color:#66d9ef">if</span> (A_1 == <span style="color:#66d9ef">this</span>.<span style="color:#960050;background-color:#1e0010">\</span>u206F<span style="color:#960050;background-color:#1e0010">\</span>u206A<span style="color:#960050;background-color:#1e0010">\</span>u202B<span style="color:#960050;background-color:#1e0010">\</span>u202B<span style="color:#960050;background-color:#1e0010">\</span>u202D<span style="color:#960050;background-color:#1e0010">\</span>u200C<span style="color:#960050;background-color:#1e0010">\</span>u202B<span style="color:#960050;background-color:#1e0010">\</span>u200F<span style="color:#960050;background-color:#1e0010">\</span>u202E<span style="color:#960050;background-color:#1e0010">\</span>u200D<span style="color:#960050;background-color:#1e0010">\</span>u200D<span style="color:#960050;background-color:#1e0010">\</span>u206D<span style="color:#960050;background-color:#1e0010">\</span>u200C<span style="color:#960050;background-color:#1e0010">\</span>u206B<span style="color:#960050;background-color:#1e0010">\</span>u202D<span style="color:#960050;background-color:#1e0010">\</span>u202E<span style="color:#960050;background-color:#1e0010">\</span>u206E<span style="color:#960050;background-color:#1e0010">\</span>u206F<span style="color:#960050;background-color:#1e0010">\</span>u206D<span style="color:#960050;background-color:#1e0010">\</span>u202A<span style="color:#960050;background-color:#1e0010">\</span>u202B<span style="color:#960050;background-color:#1e0010">\</span>u200F<span style="color:#960050;background-color:#1e0010">\</span>u206F<span style="color:#960050;background-color:#1e0010">\</span>u206F<span style="color:#960050;background-color:#1e0010">\</span>u200F<span style="color:#960050;background-color:#1e0010">\</span>u200E<span style="color:#960050;background-color:#1e0010">\</span>u206F<span style="color:#960050;background-color:#1e0010">\</span>u206A<span style="color:#960050;background-color:#1e0010">\</span>u206E<span style="color:#960050;background-color:#1e0010">\</span>u202A<span style="color:#960050;background-color:#1e0010">\</span>u200C<span style="color:#960050;background-color:#1e0010">\</span>u202D<span style="color:#960050;background-color:#1e0010">\</span>u202B<span style="color:#960050;background-color:#1e0010">\</span>u202B<span style="color:#960050;background-color:#1e0010">\</span>u202C<span style="color:#960050;background-color:#1e0010">\</span>u206A<span style="color:#960050;background-color:#1e0010">\</span>u200D<span style="color:#960050;background-color:#1e0010">\</span>u200B<span style="color:#960050;background-color:#1e0010">\</span>u202A<span style="color:#960050;background-color:#1e0010">\</span>u202A<span style="color:#960050;background-color:#1e0010">\</span>u202E(<span style="color:#66d9ef">this</span>.<span style="color:#960050;background-color:#1e0010">\</span>u200F<span style="color:#960050;background-color:#1e0010">\</span>u202A<span style="color:#960050;background-color:#1e0010">\</span>u202A<span style="color:#960050;background-color:#1e0010">\</span>u200C<span style="color:#960050;background-color:#1e0010">\</span>u200F<span style="color:#960050;background-color:#1e0010">\</span>u206C<span style="color:#960050;background-color:#1e0010">\</span>u202B<span style="color:#960050;background-color:#1e0010">\</span>u202C<span style="color:#960050;background-color:#1e0010">\</span>u206B<span style="color:#960050;background-color:#1e0010">\</span>u206B<span style="color:#960050;background-color:#1e0010">\</span>u200D<span style="color:#960050;background-color:#1e0010">\</span>u206A<span style="color:#960050;background-color:#1e0010">\</span>u202D<span style="color:#960050;background-color:#1e0010">\</span>u200B<span style="color:#960050;background-color:#1e0010">\</span>u202C<span style="color:#960050;background-color:#1e0010">\</span>u202B<span style="color:#960050;background-color:#1e0010">\</span>u202B<span style="color:#960050;background-color:#1e0010">\</span>u200B<span style="color:#960050;background-color:#1e0010">\</span>u202C<span style="color:#960050;background-color:#1e0010">\</span>u202B<span style="color:#960050;background-color:#1e0010">\</span>u202E<span style="color:#960050;background-color:#1e0010">\</span>u202E<span style="color:#960050;background-color:#1e0010">\</span>u202A<span style="color:#960050;background-color:#1e0010">\</span>u202D<span style="color:#960050;background-color:#1e0010">\</span>u200C<span style="color:#960050;background-color:#1e0010">\</span>u202B<span style="color:#960050;background-color:#1e0010">\</span>u206F<span style="color:#960050;background-color:#1e0010">\</span>u202C<span style="color:#960050;background-color:#1e0010">\</span>u202C<span style="color:#960050;background-color:#1e0010">\</span>u206D<span style="color:#960050;background-color:#1e0010">\</span>u206E<span style="color:#960050;background-color:#1e0010">\</span>u206B<span style="color:#960050;background-color:#1e0010">\</span>u206D<span style="color:#960050;background-color:#1e0010">\</span>u200D<span style="color:#960050;background-color:#1e0010">\</span>u202D<span style="color:#960050;background-color:#1e0010">\</span>u202D<span style="color:#960050;background-color:#1e0010">\</span>u200E<span style="color:#960050;background-color:#1e0010">\</span>u202B<span style="color:#960050;background-color:#1e0010">\</span>u200D<span style="color:#960050;background-color:#1e0010">\</span>u200E<span style="color:#960050;background-color:#1e0010">\</span>u202E, <span style="color:#66d9ef">this</span>.<span style="color:#960050;background-color:#1e0010">\</span>u206B<span style="color:#960050;background-color:#1e0010">\</span>u206A<span style="color:#960050;background-color:#1e0010">\</span>u200E<span style="color:#960050;background-color:#1e0010">\</span>u200C<span style="color:#960050;background-color:#1e0010">\</span>u206D<span style="color:#960050;background-color:#1e0010">\</span>u200B<span style="color:#960050;background-color:#1e0010">\</span>u200D<span style="color:#960050;background-color:#1e0010">\</span>u200F<span style="color:#960050;background-color:#1e0010">\</span>u202C<span style="color:#960050;background-color:#1e0010">\</span>u206C<span style="color:#960050;background-color:#1e0010">\</span>u202B<span style="color:#960050;background-color:#1e0010">\</span>u206E<span style="color:#960050;background-color:#1e0010">\</span>u206D<span style="color:#960050;background-color:#1e0010">\</span>u200D<span style="color:#960050;background-color:#1e0010">\</span>u200C<span style="color:#960050;background-color:#1e0010">\</span>u200D<span style="color:#960050;background-color:#1e0010">\</span>u202D<span style="color:#960050;background-color:#1e0010">\</span>u200D<span style="color:#960050;background-color:#1e0010">\</span>u202A<span style="color:#960050;background-color:#1e0010">\</span>u202E<span style="color:#960050;background-color:#1e0010">\</span>u206D<span style="color:#960050;background-color:#1e0010">\</span>u202D<span style="color:#960050;background-color:#1e0010">\</span>u200C<span style="color:#960050;background-color:#1e0010">\</span>u202A<span style="color:#960050;background-color:#1e0010">\</span>u206F<span style="color:#960050;background-color:#1e0010">\</span>u206D<span style="color:#960050;background-color:#1e0010">\</span>u200B<span style="color:#960050;background-color:#1e0010">\</span>u206B<span style="color:#960050;background-color:#1e0010">\</span>u202A<span style="color:#960050;background-color:#1e0010">\</span>u206F<span style="color:#960050;background-color:#1e0010">\</span>u206C<span style="color:#960050;background-color:#1e0010">\</span>u200E<span style="color:#960050;background-color:#1e0010">\</span>u202D<span style="color:#960050;background-color:#1e0010">\</span>u202E<span style="color:#960050;background-color:#1e0010">\</span>u200F<span style="color:#960050;background-color:#1e0010">\</span>u200E<span style="color:#960050;background-color:#1e0010">\</span>u206A<span style="color:#960050;background-color:#1e0010">\</span>u200F<span style="color:#960050;background-color:#1e0010">\</span>u200F<span style="color:#960050;background-color:#1e0010">\</span>u202E<span style="color:#960050;background-color:#1e0010">\</span>u202E))
+		{
+			MessageBox.Show(<span style="color:#e6db74">&#34;Enjoy your package!&#34;</span>);
+			<span style="color:#66d9ef">return</span>;
+		}
+		MessageBox.Show(<span style="color:#e6db74">&#34;Thats not your package!&#34;</span>);
+	}
+
+	<span style="color:#75715e">// (...)
+</span><span style="color:#75715e"></span>
+	<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">string</span> <span style="color:#960050;background-color:#1e0010">\</span>u200F<span style="color:#960050;background-color:#1e0010">\</span>u202A<span style="color:#960050;background-color:#1e0010">\</span>u202A<span style="color:#960050;background-color:#1e0010">\</span>u200C<span style="color:#960050;background-color:#1e0010">\</span>u200F<span style="color:#960050;background-color:#1e0010">\</span>u206C<span style="color:#960050;background-color:#1e0010">\</span>u202B<span style="color:#960050;background-color:#1e0010">\</span>u202C<span style="color:#960050;background-color:#1e0010">\</span>u206B<span style="color:#960050;background-color:#1e0010">\</span>u206B<span style="color:#960050;background-color:#1e0010">\</span>u200D<span style="color:#960050;background-color:#1e0010">\</span>u206A<span style="color:#960050;background-color:#1e0010">\</span>u202D<span style="color:#960050;background-color:#1e0010">\</span>u200B<span style="color:#960050;background-color:#1e0010">\</span>u202C<span style="color:#960050;background-color:#1e0010">\</span>u202B<span style="color:#960050;background-color:#1e0010">\</span>u202B<span style="color:#960050;background-color:#1e0010">\</span>u200B<span style="color:#960050;background-color:#1e0010">\</span>u202C<span style="color:#960050;background-color:#1e0010">\</span>u202B<span style="color:#960050;background-color:#1e0010">\</span>u202E<span style="color:#960050;background-color:#1e0010">\</span>u202E<span style="color:#960050;background-color:#1e0010">\</span>u202A<span style="color:#960050;background-color:#1e0010">\</span>u202D<span style="color:#960050;background-color:#1e0010">\</span>u200C<span style="color:#960050;background-color:#1e0010">\</span>u202B<span style="color:#960050;background-color:#1e0010">\</span>u206F<span style="color:#960050;background-color:#1e0010">\</span>u202C<span style="color:#960050;background-color:#1e0010">\</span>u202C<span style="color:#960050;background-color:#1e0010">\</span>u206D<span style="color:#960050;background-color:#1e0010">\</span>u206E<span style="color:#960050;background-color:#1e0010">\</span>u206B<span style="color:#960050;background-color:#1e0010">\</span>u206D<span style="color:#960050;background-color:#1e0010">\</span>u200D<span style="color:#960050;background-color:#1e0010">\</span>u202D<span style="color:#960050;background-color:#1e0010">\</span>u202D<span style="color:#960050;background-color:#1e0010">\</span>u200E<span style="color:#960050;background-color:#1e0010">\</span>u202B<span style="color:#960050;background-color:#1e0010">\</span>u200D<span style="color:#960050;background-color:#1e0010">\</span>u200E<span style="color:#960050;background-color:#1e0010">\</span>u202E = <span style="color:#e6db74">&#34;yTzdlwehExU13XhHfGxExaLthEFOSRPuy8GxBZVvPig=&#34;</span>;
+
+	<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">string</span> <span style="color:#960050;background-color:#1e0010">\</span>u206B<span style="color:#960050;background-color:#1e0010">\</span>u206A<span style="color:#960050;background-color:#1e0010">\</span>u200E<span style="color:#960050;background-color:#1e0010">\</span>u200C<span style="color:#960050;background-color:#1e0010">\</span>u206D<span style="color:#960050;background-color:#1e0010">\</span>u200B<span style="color:#960050;background-color:#1e0010">\</span>u200D<span style="color:#960050;background-color:#1e0010">\</span>u200F<span style="color:#960050;background-color:#1e0010">\</span>u202C<span style="color:#960050;background-color:#1e0010">\</span>u206C<span style="color:#960050;background-color:#1e0010">\</span>u202B<span style="color:#960050;background-color:#1e0010">\</span>u206E<span style="color:#960050;background-color:#1e0010">\</span>u206D<span style="color:#960050;background-color:#1e0010">\</span>u200D<span style="color:#960050;background-color:#1e0010">\</span>u200C<span style="color:#960050;background-color:#1e0010">\</span>u200D<span style="color:#960050;background-color:#1e0010">\</span>u202D<span style="color:#960050;background-color:#1e0010">\</span>u200D<span style="color:#960050;background-color:#1e0010">\</span>u202A<span style="color:#960050;background-color:#1e0010">\</span>u202E<span style="color:#960050;background-color:#1e0010">\</span>u206D<span style="color:#960050;background-color:#1e0010">\</span>u202D<span style="color:#960050;background-color:#1e0010">\</span>u200C<span style="color:#960050;background-color:#1e0010">\</span>u202A<span style="color:#960050;background-color:#1e0010">\</span>u206F<span style="color:#960050;background-color:#1e0010">\</span>u206D<span style="color:#960050;background-color:#1e0010">\</span>u200B<span style="color:#960050;background-color:#1e0010">\</span>u206B<span style="color:#960050;background-color:#1e0010">\</span>u202A<span style="color:#960050;background-color:#1e0010">\</span>u206F<span style="color:#960050;background-color:#1e0010">\</span>u206C<span style="color:#960050;background-color:#1e0010">\</span>u200E<span style="color:#960050;background-color:#1e0010">\</span>u202D<span style="color:#960050;background-color:#1e0010">\</span>u202E<span style="color:#960050;background-color:#1e0010">\</span>u200F<span style="color:#960050;background-color:#1e0010">\</span>u200E<span style="color:#960050;background-color:#1e0010">\</span>u206A<span style="color:#960050;background-color:#1e0010">\</span>u200F<span style="color:#960050;background-color:#1e0010">\</span>u200F<span style="color:#960050;background-color:#1e0010">\</span>u202E<span style="color:#960050;background-color:#1e0010">\</span>u202E = <span style="color:#e6db74">&#34;vyt4-4nrz-1337ko&#34;</span>;
+
+<span style="color:#75715e">// (...)
+</span></code></pre></div><p>That&rsquo;s the class that handles buttons actions and user provided data. After a little bit of reversing I knew more less what&rsquo;s going on (again some parts were omitted):</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c#" data-lang="c#"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MainWindow</span> : Window, IComponentConnector
+{
+	<span style="color:#66d9ef">public</span> MainWindow()
+	{
+		<span style="color:#66d9ef">this</span>.InitializeComponent();
+		<span style="color:#66d9ef">new</span> Button
+		{
+			Name = <span style="color:#e6db74">&#34;btn1&#34;</span>
+		}.Click += <span style="color:#66d9ef">this</span>.btn1Action;
+	}
+
+	<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">string</span> Decrypt(<span style="color:#66d9ef">string</span> A_1, <span style="color:#66d9ef">string</span> A_2)
+	{
+		<span style="color:#66d9ef">byte</span>[] array = Convert.FromBase64String(A_1);
+		TripleDESCryptoServiceProvider tripleDESCryptoServiceProvider = <span style="color:#66d9ef">new</span> TripleDESCryptoServiceProvider();
+		tripleDESCryptoServiceProvider.Key = Encoding.UTF8.GetBytes(A_2);
+		tripleDESCryptoServiceProvider.Mode = CipherMode.ECB;
+		tripleDESCryptoServiceProvider.Padding = PaddingMode.PKCS7;
+		<span style="color:#66d9ef">byte</span>[] bytes = tripleDESCryptoServiceProvider.CreateDecryptor().TransformFinalBlock(array, <span style="color:#ae81ff">0</span>, array.Length);
+		tripleDESCryptoServiceProvider.Clear();
+		<span style="color:#66d9ef">return</span> Encoding.UTF8.GetString(bytes);
+	}
+
+	<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> btn1Action(<span style="color:#66d9ef">object</span> A_1, RoutedEventArgs A_2)
+	{
+		<span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> num = <span style="color:#ae81ff">138344687</span>; num == <span style="color:#ae81ff">138344687</span>; num = <span style="color:#ae81ff">397736</span>)
+		{
+		}
+		<span style="color:#66d9ef">string</span> text = <span style="color:#66d9ef">this</span>.passwordField.Text;
+		<span style="color:#66d9ef">string</span> text2 = <span style="color:#66d9ef">this</span>.loginField.Text;
+		<span style="color:#66d9ef">this</span>.CheckPassoword1(text);
+	}
+
+	<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> CheckPassoword1(<span style="color:#66d9ef">string</span> A_1)
+	{
+		<span style="color:#66d9ef">this</span>.CheckPassword2(A_1);
+	}
+
+	<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> CheckPassword2(<span style="color:#66d9ef">string</span> A_1)
+	{
+		<span style="color:#66d9ef">this</span>.CheckPassword(A_1);
+	}
+
+	<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> CheckPassword(<span style="color:#66d9ef">string</span> A_1)
+	{
+		<span style="color:#66d9ef">if</span> (A_1 == <span style="color:#66d9ef">this</span>.Decrypt(<span style="color:#66d9ef">this</span>.password_b64, <span style="color:#66d9ef">this</span>.key))
+		{
+			MessageBox.Show(<span style="color:#e6db74">&#34;Enjoy your package!&#34;</span>);
+			<span style="color:#66d9ef">return</span>;
+		}
+		MessageBox.Show(<span style="color:#e6db74">&#34;Thats not your package!&#34;</span>);
+	}
+
+ <span style="color:#75715e">// (...)
+</span><span style="color:#75715e"></span>
+	<span style="color:#75715e">// (...)
+</span><span style="color:#75715e"></span> 
+	}
+
+	<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">string</span> password_b64 = <span style="color:#e6db74">&#34;yTzdlwehExU13XhHfGxExaLthEFOSRPuy8GxBZVvPig=&#34;</span>;
+
+	<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">string</span> key = <span style="color:#e6db74">&#34;vyt4-4nrz-1337ko&#34;</span>;
+
+	<span style="color:#66d9ef">internal</span> TextBox loginField;
+
+	<span style="color:#66d9ef">internal</span> TextBox passwordField;
+
+	<span style="color:#66d9ef">internal</span> Button confirmBUtton;
+
+	<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">bool</span> <span style="color:#960050;background-color:#1e0010">\</span>u202E<span style="color:#960050;background-color:#1e0010">\</span>u202D<span style="color:#960050;background-color:#1e0010">\</span>u206E<span style="color:#960050;background-color:#1e0010">\</span>u206F<span style="color:#960050;background-color:#1e0010">\</span>u206C<span style="color:#960050;background-color:#1e0010">\</span>u200F<span style="color:#960050;background-color:#1e0010">\</span>u202D<span style="color:#960050;background-color:#1e0010">\</span>u202C<span style="color:#960050;background-color:#1e0010">\</span>u206C<span style="color:#960050;background-color:#1e0010">\</span>u200D<span style="color:#960050;background-color:#1e0010">\</span>u200C<span style="color:#960050;background-color:#1e0010">\</span>u200D<span style="color:#960050;background-color:#1e0010">\</span>u206D<span style="color:#960050;background-color:#1e0010">\</span>u206F<span style="color:#960050;background-color:#1e0010">\</span>u206B<span style="color:#960050;background-color:#1e0010">\</span>u200B<span style="color:#960050;background-color:#1e0010">\</span>u206A<span style="color:#960050;background-color:#1e0010">\</span>u206E<span style="color:#960050;background-color:#1e0010">\</span>u200F<span style="color:#960050;background-color:#1e0010">\</span>u200E<span style="color:#960050;background-color:#1e0010">\</span>u206F<span style="color:#960050;background-color:#1e0010">\</span>u206B<span style="color:#960050;background-color:#1e0010">\</span>u206C<span style="color:#960050;background-color:#1e0010">\</span>u206C<span style="color:#960050;background-color:#1e0010">\</span>u206C<span style="color:#960050;background-color:#1e0010">\</span>u206F<span style="color:#960050;background-color:#1e0010">\</span>u206B<span style="color:#960050;background-color:#1e0010">\</span>u200C<span style="color:#960050;background-color:#1e0010">\</span>u200B<span style="color:#960050;background-color:#1e0010">\</span>u202A<span style="color:#960050;background-color:#1e0010">\</span>u206E<span style="color:#960050;background-color:#1e0010">\</span>u202D<span style="color:#960050;background-color:#1e0010">\</span>u200F<span style="color:#960050;background-color:#1e0010">\</span>u202B<span style="color:#960050;background-color:#1e0010">\</span>u200F<span style="color:#960050;background-color:#1e0010">\</span>u200C<span style="color:#960050;background-color:#1e0010">\</span>u200B<span style="color:#960050;background-color:#1e0010">\</span>u202A<span style="color:#960050;background-color:#1e0010">\</span>u202D<span style="color:#960050;background-color:#1e0010">\</span>u200E<span style="color:#960050;background-color:#1e0010">\</span>u202E;
+}
+</code></pre></div><p>Function btn1Action is ran whenever user clicks &ldquo;Take Package!&rdquo; button . All it does is save user provided data and call function that check provided password. Function CheckPassword decrypt hardcoded password and compare it with the password provided by the user. From the Decrypt function we can clearly see that password is encryped with 3DES in ECB mode and Base64 encoded. To decrypt it I wrote python script:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e">#!/usr/bin/python3</span>
+<span style="color:#f92672">from</span> Crypto.Cipher <span style="color:#f92672">import</span> DES3
+<span style="color:#f92672">import</span> base64
+
+
+enc_pass <span style="color:#f92672">=</span> base64<span style="color:#f92672">.</span>b64decode(<span style="color:#e6db74">&#39;yTzdlwehExU13XhHfGxExaLthEFOSRPuy8GxBZVvPig=&#39;</span>)
+key <span style="color:#f92672">=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;vyt4-4nrz-1337ko&#39;</span>
+dec <span style="color:#f92672">=</span> DES3<span style="color:#f92672">.</span>new(key, DES3<span style="color:#f92672">.</span>MODE_ECB)
+
+<span style="color:#66d9ef">print</span>(dec<span style="color:#f92672">.</span>decrypt(enc_pass)<span style="color:#f92672">.</span>decode(<span style="color:#e6db74">&#39;utf-8&#39;</span>))
+</code></pre></div><p>Output: <code>KAF{p0rch_thi3fs_g0_4way}</code></p>
+
+    </article>
+</div>
+
+
+        
+<nav role="navigation" class="flex-container bottom-menu">
+    
+<hr />
+<p>
+
+
+    
+        <a href="/posts">back</a>
+        
+            &#183;
+        
+    
+
+    
+        
+            <a href="/about">whoami</a>
+        
+    
+    
+        
+            &#183; 
+            <a href="/posts">posts</a>
+        
+    
+    &#183; 
+    <a href="/">
+        /
+    </a>
+
+</p>
+</nav>
+
+    </main>
+    
+    <footer class="flex-container footer"></footer>
+    
+    
+</body>
+
+</html>

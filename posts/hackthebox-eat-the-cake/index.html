@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    
+    <meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="chrome=1">
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="referrer" content="no-referrer">
+
+<title>
+    HackTheBox - Eat the Cake! - bilith&rsquo;s blog
+</title>
+
+
+<link rel="shortcut icon" href="/icon.png">
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/css/main.min.6c0abcd1087fe217d3a9b27c7ffc25e2ed45b118b5ae71e55a4c5fc80a56a746.css" integrity="sha256-bAq80Qh/4hfTqbJ8f/wl4u1FsRi1rnHlWkxfyApWp0Y=" crossorigin="anonymous" media="screen">
+
+
+
+
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Didact+Gothic">
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="HackTheBox - Eat the Cake!"/>
+<meta name="twitter:description" content="Eat the Cake! [rev, 641 solvers] TLDR; Simple re challenge written in C&#43;&#43;, which checks every character of the input. Despite used language, it&rsquo;s easily reversible doing only static analysis.
+At the start of the challenge I was given one file called cake.exe. Quick file check revealed that it&rsquo;s UPX packed binary. To unpack it I used standard tool available in kali repositories:
+➜ upx -d cake.exe Ultimate Packer for eXecutables Copyright (C) 1996 - 2018 UPX 3."/>
+
+<meta property="og:title" content="HackTheBox - Eat the Cake!" />
+<meta property="og:description" content="Eat the Cake! [rev, 641 solvers] TLDR; Simple re challenge written in C&#43;&#43;, which checks every character of the input. Despite used language, it&rsquo;s easily reversible doing only static analysis.
+At the start of the challenge I was given one file called cake.exe. Quick file check revealed that it&rsquo;s UPX packed binary. To unpack it I used standard tool available in kali repositories:
+➜ upx -d cake.exe Ultimate Packer for eXecutables Copyright (C) 1996 - 2018 UPX 3." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://billith.github.io/posts/hackthebox-eat-the-cake/" />
+<meta property="article:published_time" content="2020-03-01T00:37:22+01:00" />
+<meta property="article:modified_time" content="2020-03-01T00:37:22+01:00" />
+
+
+    
+
+    
+    
+    
+    <title>
+        
+        HackTheBox - Eat the Cake!
+        
+    </title>
+</head>
+
+<body>
+    
+    
+    <header class="wrap flex-container">
+        <h1>HackTheBox - Eat the Cake!</h1>
+    </header>
+    
+    <main class="wrap">
+        
+<div class="flex-container">
+    <aside role="complementary">
+        Sun Mar 01, 2020 &#183; 876 words
+        <div class="tag-container">
+            
+            
+            <span class="tag">
+                <a href="/tags/htb/">
+                    htb
+                </a>
+            </span>
+            
+            
+            
+            <span class="tag">
+                <a href="/tags/re/">
+                    re
+                </a>
+            </span>
+            
+            
+            
+            <span class="tag">
+                <a href="/tags/upx/">
+                    upx
+                </a>
+            </span>
+            
+            
+        </div>
+    </aside>
+    <hr />
+    <article role="article">
+        <h1 id="eat-the-cake">Eat the Cake!</h1>
+<h4 id="rev-641-solvers">[rev, 641 solvers]</h4>
+<p><strong>TLDR</strong>; Simple re challenge written in C++, which checks every character of the input. Despite used language, it&rsquo;s easily reversible doing only static analysis.</p>
+<p>At the start of the challenge I was given one file called <code>cake.exe</code>. Quick <code>file</code> check revealed that it&rsquo;s UPX packed binary. To unpack it I used standard tool available in kali repositories:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">➜  upx -d cake.exe 
+                       Ultimate Packer <span style="color:#66d9ef">for</span> eXecutables
+                          Copyright <span style="color:#f92672">(</span>C<span style="color:#f92672">)</span> <span style="color:#ae81ff">1996</span> - <span style="color:#ae81ff">2018</span>
+UPX 3.95        Markus Oberhumer, Laszlo Molnar &amp; John Reiser   Aug 26th <span style="color:#ae81ff">2018</span>
+
+        File size         Ratio      Format      Name
+   --------------------   ------   -----------   -----------
+     <span style="color:#ae81ff">15872</span> &lt;-      <span style="color:#ae81ff">9216</span>   58.06%    win32/pe     cake.exe
+
+Unpacked <span style="color:#ae81ff">1</span> file.
+</code></pre></div><p>When binary is run, it expects 10 characters long password and then 15 characters long password. Looking at <code>strings cake.exe</code> output I saw few interesting strings. One of them was expecially interesting:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">➜  strings cake_1.exe
+...
+Congratulations! Now go validate your flag!
+...
+</code></pre></div><p>So, when I knew where I should start looking, next thing I did was loading binary into Ghidra. I opened <strong>Window -&gt; Defined Strings</strong>, located interesting string once again and looked on a references to that address.
+<img src="/images/posts/eat-the-cake-1.png" alt="image">
+There is only one reference to that string at address <code>0x40152d</code>. Following this reference, I jumped to the code where this string is used and where probably the password is validated. After that I checked references to the function I was currently in. There&rsquo;s only one reference and it&rsquo;s in the entry function. That basiclly mean it&rsquo;s probablly <strong>main</strong> function. Decompiled code shows that both passwords are stored in the same buffer and program asks for the second password, only when the first one isn&rsquo;t 15 characters long. If input satisfies required conditions, program prints <code>&quot;Congratulations! Now go validate your flag!\n&quot;</code>, otherwise it prints <code>&quot;Better luck next time...\n&quot;</code>. There are actually two flags that determines if the input is correct. The first one is the result of function call and the second one is just a local variable, which is set during execution. To make it more readable I changed function return type and local variable type to bool.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">if</span> (((flag1 <span style="color:#f92672">==</span> false) <span style="color:#f92672">||</span> (flag2 <span style="color:#f92672">==</span> false)) <span style="color:#f92672">||</span> 
+  (output <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;Congratulations! Now go validate your flag!</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, local_439 <span style="color:#f92672">==</span> false)) {
+    output <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;Better luck next time...</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>;
+}
+FUN_00401ba0((<span style="color:#66d9ef">int</span> <span style="color:#f92672">*</span>)cout_exref,output);
+</code></pre></div><p>But let&rsquo;s get back to the beginning of the function. First, program prints some banner and checks input length. After that, first flag is set to the return value of function <code>FUN_004012f0</code>:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">if</span> (<span style="color:#ae81ff">15</span> <span style="color:#f92672">&lt;</span> local_424) {
+  _Src <span style="color:#f92672">=</span> local_438[<span style="color:#ae81ff">0</span>];
+}
+strncpy_s(<span style="color:#f92672">&amp;</span>input,<span style="color:#ae81ff">0x400</span>,(<span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>)_Src,<span style="color:#ae81ff">0x400</span>);
+local_21 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+flag1 <span style="color:#f92672">=</span> FUN_004012f0(<span style="color:#f92672">&amp;</span>input);
+</code></pre></div><p>This function implements checks on some of the characters from provided input. For these checks, it&rsquo;s using two imported function from standard library, <code>isdigit</code> and <code>atoi</code>. The first one takes an integer as a parameter and checks if it&rsquo;s in a range from 0 to 9. If it is, function return true (non 0), otherwise return false (0). Second function tries to cast string to integer. In case of failure, it returns 0, otherwise it return converted value as a integer.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">bool</span> <span style="color:#66d9ef">__fastcall</span> <span style="color:#a6e22e">check_1</span>(<span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>input)
+
+{
+  <span style="color:#66d9ef">int</span> iVar1;
+  <span style="color:#66d9ef">int</span> iVar2;
+  
+  iVar1 <span style="color:#f92672">=</span> isdigit((<span style="color:#66d9ef">int</span>)input[<span style="color:#ae81ff">6</span>]);
+  <span style="color:#66d9ef">if</span> (iVar1 <span style="color:#f92672">!=</span> <span style="color:#ae81ff">0</span>) {
+    iVar1 <span style="color:#f92672">=</span> isdigit((<span style="color:#66d9ef">int</span>)input[<span style="color:#ae81ff">12</span>]);
+    <span style="color:#66d9ef">if</span> (iVar1 <span style="color:#f92672">!=</span> <span style="color:#ae81ff">0</span>) {
+      iVar1 <span style="color:#f92672">=</span> atoi(input <span style="color:#f92672">+</span> <span style="color:#ae81ff">6</span>);
+      iVar2 <span style="color:#f92672">=</span> atoi(input <span style="color:#f92672">+</span> <span style="color:#ae81ff">12</span>);
+      <span style="color:#66d9ef">if</span> ((((iVar1 <span style="color:#f92672">==</span> <span style="color:#ae81ff">3</span>) <span style="color:#f92672">&amp;&amp;</span> (iVar2 <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span>)) <span style="color:#f92672">&amp;&amp;</span> (input[<span style="color:#ae81ff">4</span>] <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;t&#39;</span>)) <span style="color:#f92672">&amp;&amp;</span> (input[<span style="color:#ae81ff">7</span>] <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;p&#39;</span>)) {
+        <span style="color:#66d9ef">return</span> true;
+      }
+    }
+  }
+  <span style="color:#66d9ef">return</span> false;
+}
+</code></pre></div><p>This function return true if a given conditions are meet:</p>
+<ul>
+<li>7th character is a digit and it equals 3</li>
+<li>13th character is a digit and equals 1</li>
+<li>5th character is &lsquo;t&rsquo;</li>
+<li>8th character is &lsquo;p&rsquo;</li>
+</ul>
+<p>Based on this, it&rsquo;s possible recover part of the password:</p>
+<pre><code>----------------------------------------------
+|01|02|03|04|05|06|07|08|09|10|11|12|13|14|15|
+|  |  |  |  | t|  | 3| p|  |  |  |  | 1|  |  |
+----------------------------------------------
+</code></pre><p>After first checks are passed, there are another smililar checks in the main function. However, in order to make the code more readable, the type of out input buffer has to be changed. Currently it&rsquo;s just <code>char</code>, but we know that input is stored in a array of length at most 1024 characters. After redefinition of a type, further checks are pretty easy to read:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">  <span style="color:#66d9ef">if</span> ((input[<span style="color:#ae81ff">3</span>] <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;k&#39;</span>) <span style="color:#f92672">&amp;&amp;</span> (input[<span style="color:#ae81ff">8</span>] <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;a&#39;</span>)) {
+    flag2 <span style="color:#f92672">=</span> local_439;
+    <span style="color:#66d9ef">if</span> ((input[<span style="color:#ae81ff">0</span>] <span style="color:#f92672">!=</span> <span style="color:#e6db74">&#39;h&#39;</span>) <span style="color:#f92672">||</span> (input[<span style="color:#ae81ff">10</span>] <span style="color:#f92672">!=</span> <span style="color:#e6db74">&#39;a&#39;</span>)) <span style="color:#66d9ef">goto</span> LAB_004014fd;
+    <span style="color:#66d9ef">if</span> (((input[<span style="color:#ae81ff">5</span>] <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;h&#39;</span>) <span style="color:#f92672">&amp;&amp;</span> (input[<span style="color:#ae81ff">9</span>] <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;r&#39;</span>)) <span style="color:#f92672">&amp;&amp;</span> (input[<span style="color:#ae81ff">11</span>] <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;d&#39;</span>)) {
+      flag2 <span style="color:#f92672">=</span> true;
+      <span style="color:#66d9ef">goto</span> LAB_004014fd;
+    }
+  }
+  flag2 <span style="color:#f92672">=</span> false;
+LAB_004014fd:
+  <span style="color:#66d9ef">if</span> ((input[<span style="color:#ae81ff">1</span>] <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;@&#39;</span>) <span style="color:#f92672">&amp;&amp;</span> (input[<span style="color:#ae81ff">14</span>] <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;E&#39;</span>)) {
+    <span style="color:#66d9ef">if</span> ((input[<span style="color:#ae81ff">2</span>] <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;c&#39;</span>) <span style="color:#f92672">&amp;&amp;</span> (input[<span style="color:#ae81ff">13</span>] <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;$&#39;</span>)) {
+      local_439 <span style="color:#f92672">=</span> true;
+    }
+  }
+  <span style="color:#66d9ef">else</span> {
+    local_439 <span style="color:#f92672">=</span> false;
+  }
+</code></pre></div><p>To pass these checks, given conditions have to be meet:</p>
+<ul>
+<li>4th character is &lsquo;k&rsquo;</li>
+<li>9th character is &lsquo;a&rsquo;</li>
+<li>1st character is &lsquo;h&rsquo;</li>
+<li>11th character is &lsquo;a&rsquo;</li>
+<li>6th character is &lsquo;h&rsquo;</li>
+<li>10th character is &lsquo;r&rsquo;</li>
+<li>12th character is &lsquo;d&rsquo;</li>
+<li>2nd character is &lsquo;@&rsquo;</li>
+<li>15th character is &lsquo;E&rsquo;</li>
+<li>3rd character is &lsquo;c&rsquo;</li>
+<li>14th character is &lsquo;$&rsquo;</li>
+</ul>
+<p>Based on this,  it&rsquo;s possible recover whole password:</p>
+<pre><code>----------------------------------------------
+|01|02|03|04|05|06|07|08|09|10|11|12|13|14|15|
+| h| @| c| k| t| h| 3| p| a| r| a| d| 1| $| E|
+----------------------------------------------
+</code></pre><p>Now when we run the program and pass <code>h@ckth3parad1$E</code> as input, <code>Congratulations! Now go validate your flag!</code> is printed, which means we&rsquo;ve got the correct password.</p>
+
+    </article>
+</div>
+
+
+        
+<nav role="navigation" class="flex-container bottom-menu">
+    
+<hr />
+<p>
+
+
+    
+        <a href="/posts">back</a>
+        
+            &#183;
+        
+    
+
+    
+        
+            <a href="/about">whoami</a>
+        
+    
+    
+        
+            &#183; 
+            <a href="/posts">posts</a>
+        
+    
+    &#183; 
+    <a href="/">
+        /
+    </a>
+
+</p>
+</nav>
+
+    </main>
+    
+    <footer class="flex-container footer"></footer>
+    
+    
+</body>
+
+</html>
