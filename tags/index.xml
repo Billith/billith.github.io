@@ -6,10 +6,46 @@
     <description>Recent content in Tags on bilith&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 01 Mar 2020 00:37:22 +0100</lastBuildDate>
+    <lastBuildDate>Sun, 02 Aug 2020 21:27:26 +0200</lastBuildDate>
     
 	<atom:link href="https://billith.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>ctf</title>
+      <link>https://billith.github.io/tags/ctf/</link>
+      <pubDate>Sun, 02 Aug 2020 21:27:26 +0200</pubDate>
+      
+      <guid>https://billith.github.io/tags/ctf/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>network</title>
+      <link>https://billith.github.io/tags/network/</link>
+      <pubDate>Sun, 02 Aug 2020 21:27:26 +0200</pubDate>
+      
+      <guid>https://billith.github.io/tags/network/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>pentest</title>
+      <link>https://billith.github.io/tags/pentest/</link>
+      <pubDate>Sun, 02 Aug 2020 21:27:26 +0200</pubDate>
+      
+      <guid>https://billith.github.io/tags/pentest/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>python</title>
+      <link>https://billith.github.io/tags/python/</link>
+      <pubDate>Sun, 02 Aug 2020 21:27:26 +0200</pubDate>
+      
+      <guid>https://billith.github.io/tags/python/</guid>
+      <description></description>
+    </item>
     
     <item>
       <title>htb</title>
@@ -35,15 +71,6 @@
       <pubDate>Sun, 01 Mar 2020 00:37:22 +0100</pubDate>
       
       <guid>https://billith.github.io/tags/upx/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>ctf</title>
-      <link>https://billith.github.io/tags/ctf/</link>
-      <pubDate>Mon, 17 Feb 2020 23:10:00 +0100</pubDate>
-      
-      <guid>https://billith.github.io/tags/ctf/</guid>
       <description></description>
     </item>
     

@@ -6,10 +6,20 @@
     <description>Recent content on bilith&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 01 Mar 2020 00:37:22 +0100</lastBuildDate>
+    <lastBuildDate>Sun, 02 Aug 2020 21:27:26 +0200</lastBuildDate>
     
 	<atom:link href="https://billith.github.io/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Inctf2020 Secure Extractor</title>
+      <link>https://billith.github.io/posts/inctf2020-secure-extractor/</link>
+      <pubDate>Sun, 02 Aug 2020 21:27:26 +0200</pubDate>
+      
+      <guid>https://billith.github.io/posts/inctf2020-secure-extractor/</guid>
+      <description>Secure Extractor [pentest, 22 solves] TLDR; You had to exploit file upload mechanism in python application to get access to python developer console. To escalate to the root user, you had to make use of bash script, which was executed every minute by cron.
+There are few CTFs during the year, which have &amp;ldquo;pentest&amp;rdquo; or &amp;ldquo;network&amp;rdquo; challanges. InCTF is one of them. For each challange you had to download separate OpenVPN config and connect to the enviroment.</description>
+    </item>
     
     <item>
       <title>HackTheBox - Eat the Cake!</title>
