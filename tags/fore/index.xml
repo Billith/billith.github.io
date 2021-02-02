@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>fore on bilith&#39;s blog</title>
+    <link>https://billith.github.io/tags/fore/</link>
+    <description>Recent content in fore on bilith&#39;s blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 02 Feb 2021 17:30:42 +0100</lastBuildDate><atom:link href="https://billith.github.io/tags/fore/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>justCTF 2020 Remote Password Manager</title>
+      <link>https://billith.github.io/posts/justctf-2020-remote-password-manager/</link>
+      <pubDate>Tue, 02 Feb 2021 17:30:42 +0100</pubDate>
+      
+      <guid>https://billith.github.io/posts/justctf-2020-remote-password-manager/</guid>
+      <description>Remote Password Manager [fore, 347 points, 12 solves] TLDR; The challenge consists of a single vmem file (VM memory dump). After some analysis, one of the things that stand out was that the mstsc.exe process was running. After a little bit of poking around, the flag could be found in one of the images preserved in the process memory. The starting point of the challenge is a vmem file. It is a virtual memory file used by various hypervisors to store RAM on VM suspension.</description>
+    </item>
+    
+  </channel>
+</rss>

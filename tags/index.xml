@@ -6,17 +6,67 @@
     <description>Recent content in Tags on bilith&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 02 Aug 2020 21:27:26 +0200</lastBuildDate>
-    
-	<atom:link href="https://billith.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <lastBuildDate>Tue, 02 Feb 2021 17:30:42 +0100</lastBuildDate><atom:link href="https://billith.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>ctf</title>
       <link>https://billith.github.io/tags/ctf/</link>
-      <pubDate>Sun, 02 Aug 2020 21:27:26 +0200</pubDate>
+      <pubDate>Tue, 02 Feb 2021 17:30:42 +0100</pubDate>
       
       <guid>https://billith.github.io/tags/ctf/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>fore</title>
+      <link>https://billith.github.io/tags/fore/</link>
+      <pubDate>Tue, 02 Feb 2021 17:30:42 +0100</pubDate>
+      
+      <guid>https://billith.github.io/tags/fore/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>forensic</title>
+      <link>https://billith.github.io/tags/forensic/</link>
+      <pubDate>Tue, 02 Feb 2021 17:30:42 +0100</pubDate>
+      
+      <guid>https://billith.github.io/tags/forensic/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>gimp</title>
+      <link>https://billith.github.io/tags/gimp/</link>
+      <pubDate>Tue, 02 Feb 2021 17:30:42 +0100</pubDate>
+      
+      <guid>https://billith.github.io/tags/gimp/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>memdump</title>
+      <link>https://billith.github.io/tags/memdump/</link>
+      <pubDate>Tue, 02 Feb 2021 17:30:42 +0100</pubDate>
+      
+      <guid>https://billith.github.io/tags/memdump/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>rdp</title>
+      <link>https://billith.github.io/tags/rdp/</link>
+      <pubDate>Tue, 02 Feb 2021 17:30:42 +0100</pubDate>
+      
+      <guid>https://billith.github.io/tags/rdp/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>volatility</title>
+      <link>https://billith.github.io/tags/volatility/</link>
+      <pubDate>Tue, 02 Feb 2021 17:30:42 +0100</pubDate>
+      
+      <guid>https://billith.github.io/tags/volatility/</guid>
       <description></description>
     </item>
     
