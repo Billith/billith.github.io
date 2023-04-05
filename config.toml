@@ -1,0 +1,38 @@
+baseURL = ''
+languageCode = 'en-us'
+title = "bilith's cave"
+theme =  ['github.com/Mitrichius/hugo-theme-anubis']
+paginate = '2'
+enableRobotsTXT = false
+
+[[menu.main]]
+identifier = 'posts'
+name = 'posts'
+title = 'posts'
+url = '/posts'
+weight = 0
+
+[[menu.main]]
+identifier = 'about'
+name = 'about'
+title = 'about'
+url = '/about'
+weight = 0
+
+[[menu.main]]
+identifier = 'tags'
+name = 'tags'
+title = 'tags'
+url = '/tags'
+weight = 0
+
+[params]
+style = 'dark'
+readMore = false
+
+[[params.social]]
+id = 'github'
+url = 'https://github.com/Billith'
+
+[markup.goldmark.renderer]
+unsafe = true
