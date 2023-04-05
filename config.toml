@@ -29,6 +29,7 @@ weight = 0
 [params]
 style = 'dark'
 readMore = false
+rssAsSocialIcon = true
 
 [[params.social]]
 id = 'github'
